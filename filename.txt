@@ -1,5 +1,8 @@
-this is some line 
-and this is another line 
-i am not sure where is the line going 
-but this is just a test sample
-hah it should be fun
+Files in Java might be tricky, but it is fun enough!
+
+This is the second line
+
+This is another line of 3
+
+
+Another line of 4
