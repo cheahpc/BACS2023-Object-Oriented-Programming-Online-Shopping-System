@@ -10,6 +10,7 @@ public class Guest extends Customer {
     public Guest(String fullName, String contactNo, String address, String guestID) {
         super(fullName, contactNo, address);
         this.guestID = guestID;
+        // TODO Set automatic Guest ID Generator
     }
 
     // Setter

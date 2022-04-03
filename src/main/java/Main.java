@@ -2,6 +2,7 @@ import java.io.File; // Import the File class
 import java.io.FileNotFoundException; // Import this class to handle errors
 import java.io.FileWriter; // Import the FileWriter class
 import java.io.IOException; // Import the IOException class to handle errors
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner; // Import the Scanner class to read text files
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.util.regex.*;
 public class Main {
     public static final String DELIMITER = ":";
     public static final String ACCOUNT_FILE = "account.txt";
+    public static final String GUEST_FILE = "guest.txt";
     public static String userInput;
     public static String[] tempStrings = new String[10];
     public static int option;
@@ -36,12 +38,15 @@ public class Main {
                     loopVal = runCreateAccount();
                     break;
                 case 3: // Login as Guest
-                    loopVal = runContinueGuest();
+                    loopVal = runGuestLogin();
                     break;
                 case 4: // Register New Guest
-                    loopVal = runCreateGuest();
+                    loopVal = runGuestSignUp();
                     break;
                 case 5:
+                    loopVal = false;
+                    break;
+                case 6:
                     runExitProgram();
                     break;
                 default:
@@ -81,8 +86,7 @@ public class Main {
                     }
                     break;
                 case 3: // User Choose 3 - Back
-                    tempStrings[0] = null;
-                    tempStrings[1] = null; // Reset temporary strings
+                    Arrays.fill(tempStrings, null); // Reset Array
                     return true; // Back to Main Menu
             }
         } while (tempStrings[0] == null || tempStrings[1] == null);
@@ -116,9 +120,7 @@ public class Main {
                     tempStrings[6] = getInput(2, 6);
                     break;
                 case 7: // back to previous menu
-                    for (int i = 0; i < tempStrings.length; i++) {
-                        tempStrings[i] = null;
-                    }
+                    Arrays.fill(tempStrings, null); // Reset Array
                     return true; // Back to main menu
             }
             // Check for empty string,
@@ -132,25 +134,23 @@ public class Main {
         } while (true);
     }
 
-    public static boolean runContinueGuest() {
+    public static boolean runGuestLogin() {
         GuestLogin: do {
             switch (getOption(3)) {
-                case 1: // Create New User Account - Set User name
-                    tempStrings[0] = getInput(3, 1);
-                    // If user name is found
-                    if (getLine(tempStrings[0], ACCOUNT_FILE) != "") {
-                        msgBox("User name " + tempStrings[0] + " already taken: ", "User Name Already Taken", 1);
+                case 1: // Guest Loin - Set Guest ID
+                    tempStrings[0] = getInput(3, 1); // Get the ID from user
+
+                    if (getLine(tempStrings[0], GUEST_FILE) == "") { // If ID not found
+                        msgBox("Guest ID not registered in System.", "Invalid Guest ID", 1);
                         tempStrings[0] = null; // Reset the temp var
                     }
                     break;
                 case 2: // back to previous menu
-                    for (int i = 0; i < tempStrings.length; i++) {
-                        tempStrings[i] = null;
-                    }
+                    tempStrings[0] = null; // Reset temporary var
                     return true; // Back to main menu
             }
             // Check for empty string,
-            if (tempStrings[1] == null) {
+            if (tempStrings[0] == null) {
                 // Continue with this menu if there are empty field
                 continue GuestLogin;
             }
@@ -158,9 +158,34 @@ public class Main {
         } while (true);
     }
 
-    public static boolean runCreateGuest() {
-        // TODO runCreateGuest Algorithm
-        return true;
+    public static boolean runGuestSignUp() {
+        GuestSignUp: do {
+            switch (getOption(4)) {
+                case 1: // Guest Sign Up - Set Full Name
+                    tempStrings[0] = getInput(4, 1);
+                    break;
+                case 2: // Guest Sign Up - Set Contact Number
+                    tempStrings[1] = getInput(4, 2);
+                    break;
+                case 3: // Guest Sign Up - Set Address
+                    tempStrings[2] = getInput(4, 3);
+                    break;
+                case 4: // Guest Sign Up - Go Back to previous menu
+                    Arrays.fill(tempStrings, null); // Reset Array
+                    return true; // Back to main menu
+            }
+
+            // Check for empty string,
+            for (int i = 0; i < 3; i++) {
+                if (tempStrings[i] == null) {
+                    // Continue with this menu if there are empty field
+                    echo("testing 123 abc debug mode", true);
+                    continue GuestSignUp;
+                }
+            }
+
+            return false; // Continue to next section
+        } while (true);
     }
 
     public static void runExitProgram() {
@@ -188,9 +213,10 @@ public class Main {
                 echo(">>    1.      User Login", true);
                 echo(">>    2.      Create New User Account", true);
                 echo(">>    3.      Guest Login", true);
-                echo(">>    4.      Cotinue as New Guest", true);
+                echo(">>    4.      Guest Sign Up", true);
+                echo(">>    5.      Window Shopping", true);
                 echo(">>", true);
-                echo(">>    5.      Exit", true);
+                echo(">>    6.      Exit", true);
                 echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                 echo(">>", true);
                 echo(">> Choose an option: ", false);
@@ -206,7 +232,6 @@ public class Main {
                 echo(">>    3.      Back", true);
                 echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                 echo(">>", true);
-
                 break;
             case 10:
                 echo(">> Choose an option: ", false);
@@ -259,7 +284,7 @@ public class Main {
                 echo("                            Guest Login                           ", true);
                 echo("------------------------------------------------------------------", true);
                 echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                echo(">>    1.      Guest ID         : " + ((tempStrings[5] == null) ? "" : tempStrings[5]), true);
+                echo(">>    1.      Guest ID         : " + ((tempStrings[0] == null) ? "" : tempStrings[0]), true);
                 echo(">>", true);
                 echo(">>    2.      Back", true);
                 echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -272,9 +297,33 @@ public class Main {
                 echo(">> Please enter 1. GUEST ID: ", false);
                 break;
             case 4: // Create a Guest
-                // TODO Interface design - Create a Guest
+                echo("------------------------------------------------------------------", true);
+                echo("                           Guest Sign Up                          ", true);
+                echo("------------------------------------------------------------------", true);
+                echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                // TODO Interface Design - Guest Sign up (generate Guest ID)
+                echo(">>    ..      Guest ID        : " + "(function to get auto ID)", true);
+                echo(">>    1.      Full Name       : " + ((tempStrings[0] == null) ? "" : tempStrings[0]), true);
+                echo(">>    2.      Contact Number  : " + ((tempStrings[1] == null) ? "" : tempStrings[1]), true);
+                echo(">>    3.      Address         : " + ((tempStrings[2] == null) ? "" : tempStrings[2]), true);
+                echo(">>", true);
+                echo(">>    4.      Back", true);
+                echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                echo(">>", true);
                 break;
-            case 5: // Exit Program
+            case 40:
+                echo(">> Choose an option: ", false);
+                break;
+            case 41:
+                echo(">> Please enter 1. FULL NAME: ", false);
+                break;
+            case 42:
+                echo(">> Please enter 2. CONTACT NUBMER: ", false);
+                break;
+            case 43:
+                echo(">> Please enter 3. ADDRESS: ", false);
+                break;
+            case 6: // Exit Program
                 break;
             default:
                 break;
@@ -291,7 +340,7 @@ public class Main {
                 break; // Break if input match
             } else {
                 // Else show error messages
-                msgBox("Input option denied.", "Invalid Input", 0);
+                msgBox("Input option denied.", "Invalid Input Option", 0);
             }
         } while (true);
         return Integer.parseInt(userInput); // Return user choice
@@ -345,15 +394,31 @@ public class Main {
             case 3: // Guest Login
                 switch (level2) {
                     case 1: // Guest Login - Set Guest ID
-                        message = "Guest ID must be in this format:\n - GXXXX\n\n eg. G0001";
+                        message = "Only 5 digits Guest ID accepted.\n eg. 02919";
                         title = "Invalid Guest ID";
                         break;
                     default:
                         break;
                 }
                 break;
-            case 4: // Create Guest
-                // TODO GetInput Invalid MSG - Create Guest
+            case 4: // Guest Sign Up
+                switch (level2) {
+                    case 1: // Guest Sign Up - Set Full Name
+                        message = "Full Name Must be alphabets only.";
+                        title = "Invalid Full Name";
+                        break;
+                    case 2: // Guest Sign Up - Set Contact Number
+                        message = "Contact number format must follow\n - 0101234567";
+                        title = "Invalid Contact Number";
+                        break;
+                    case 3: // Guest Sign Up - Set Address
+                        message = "Address must conatin: \n - At least 1 number\n - At least 1 alphabet";
+                        title = "Invalid Address";
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
@@ -441,9 +506,19 @@ public class Main {
                 regExPat = Pattern.compile("[12]{1}");
                 break;
             case 31: // Guest Login - Set Guest ID
-                regExPat = Pattern.compile("^G[0-9]{4}$");
-            case 4: // TODO Regex - Create Guest
-                regExPat = Pattern.compile("");
+                regExPat = Pattern.compile("[0-9]{5}");
+                break;
+            case 4: // Guest Sign Up
+                regExPat = Pattern.compile("[0-4]{1}");
+                break;
+            case 41: // Guest Sign Up - Set Full Name
+                regExPat = Pattern.compile("[^.!@#$%^&*+:;/|?0-9\"]*");
+                break;
+            case 42: // Guest Sign Up - Set Contact Number
+                regExPat = Pattern.compile("^01[0-9]{8,9}$");
+                break;
+            case 43: // Guest Sign Up - Set Address
+                regExPat = Pattern.compile("[^.!@#$%^&*+:;/|?\"]*");
                 break;
             default:
                 return true; // Default return value when no ID detected
