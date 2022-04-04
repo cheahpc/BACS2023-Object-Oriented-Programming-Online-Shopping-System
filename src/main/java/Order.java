@@ -1,5 +1,3 @@
-import java.util.Date;
-
 public class Order {
     // Data Properties
     private String orderID;

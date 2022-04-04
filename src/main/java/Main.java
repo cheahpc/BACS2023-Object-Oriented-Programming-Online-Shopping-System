@@ -54,7 +54,10 @@ public class Main {
             // } else if (currentCustomer instanceof RegisteredCustomer) {
             // echo("This is a User account\n", true);
             // }
-            // echo(currentOrder.toString(), true);
+            tempStrings[0] = "3";
+            echo(getLine(tempStrings[0], 0, ORDER_FILE), true);
+            // echo(splitData(getLine(tempStrings[0], 0, ORDER_FILE))[2], true);
+
         }
 
         LevelA: while (Start) {
@@ -117,7 +120,7 @@ public class Main {
                         dateFormat.format(date),
                         "Pending Payment");
 
-                echo(currentOrder.toString(), true);
+                echo(currentOrder.toString(), true); // Debug?
                 orderFileName = getOrderFileName(); // Set order file name for the customer
                 fileCreate(orderFileName); // Create the order file for the customer
             }
@@ -367,15 +370,16 @@ public class Main {
 
     // region MENU Function B
     public static void runB_TrackOrder() {
-        TrackOrder: do {
+        do {
             switch (getOption(2, 1)) {
                 case 1: // User Choose 1 - Set Order ID
                     tempStrings[0] = getInput(2, 1, 1); // Get Order ID
-                    if (!(getLine(tempStrings[0], 0, ORDER_FILE) != "")) {
+                    if (getLine(tempStrings[0], 0, ORDER_FILE) == "") {
                         // When Order ID Not found
                         tempStrings[0] = null;
                         msgBox("Order ID does not exist.", "Invalid Order ID", 0);
-                    } else if (!(currentCustomer.getUserID() == splitData(getLine(tempStrings[0], 0, ORDER_FILE))[2])) {
+                    } else if (!(currentCustomer.getUserID()
+                            .equals(splitData(getLine(tempStrings[0], 0, ORDER_FILE))[2]))) {
                         // When order id found but ID does not belong to this user;
                         msgBox("This Order ID does not exist in your order history.", "No Such Order", 0);
                         tempStrings[0] = null;
