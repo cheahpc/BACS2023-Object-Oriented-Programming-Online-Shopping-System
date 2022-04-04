@@ -21,7 +21,6 @@ public class Main {
     public static final String ITEM_FILE = "item.txt";
     public static final String ORDER_FILE = "order.txt";
     public static String orderFileName = "";
-    public static final int STOCK_COUNT = 23;
     public static final int GUEST_SIZE = 99999;
     public static int option;
     public static int itemCounter = 0;
@@ -114,11 +113,11 @@ public class Main {
 
             // region Level 3 - Shopping
             if (!windowShopping) {
-
                 // TODO Generate ORDER ID
                 currentOrder = new Order(String.valueOf(getFileSize(ORDER_FILE)), currentCustomer, payment,
                         dateFormat.format(date),
                         "Pending Payment");
+
                 echo(currentOrder.toString(), true);
                 orderFileName = getOrderFileName(); // Set order file name for the customer
                 fileCreate(orderFileName); // Create the order file for the customer
@@ -129,7 +128,7 @@ public class Main {
                 switch (option = getOption(3, 0)) {
 
                     case 101: // Check Order
-                        // TODO Algorithm for check order
+                        // TODO Level C Algorithm for check order
 
                         break;
                     case 102: // USer Choose Track Order
@@ -140,16 +139,14 @@ public class Main {
                         continue LevelC;
 
                     default:
-                        // TODO Sum up something new
-
+                        // TODO Level C Sum up something new
+                        // No : Order ID : Item ID : Item Name : Item Price : Qty
                         tempStrings[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
                         product = new Product(splitData(tempStrings[9])[1], splitData(tempStrings[9])[2],
-                                Double.parseDouble(splitData(tempStrings[9])[3]));
+                                Double.parseDouble(splitData(tempStrings[9])[3])); // Set product product object
 
                         tempStrings[4] = dateFormat.format(date);
                         itemCounter += 1;
-                        // tempStrings[8] = String.format("%s:%s:%s:%s", String.valueOf(itemCounter), );
-                        // No : Order ID : Item ID : Item Name : Item Price : Qty
                         setLine(tempStrings[8], orderFileName);
                         break;
                 }
@@ -601,22 +598,24 @@ public class Main {
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         if (currentCustomer instanceof RegisteredCustomer) {
                             echo(">> Current User: " + currentCustomer.getUserID(), false);
-                            echo(">> Cart Ammount: ", false);
                             // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
                         } else if (currentCustomer instanceof Guest) {
                             echo(">> Guest ID    : " + currentCustomer.getUserID(), false);
-                            echo(">> Cart Ammount: ", false);
                         }
+                        echo(">> Cart Ammount: ", false);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>    No        Product                 Price", true);
-                        for (int i = 1; i <= STOCK_COUNT; i++) {
-                            String temp = getLine(Integer.toString(i), 0, ITEM_FILE);
-                            if (i < 10) {
+                        for (int i = 0; i < getFileSize(ITEM_FILE); i++) {
+                            if (i < 9) {
                                 echo(">>     ", false);
                             } else {
                                 echo(">>    ", false);
                             }
-                            echo(splitData(temp)[0] + "\t" + splitData(temp)[1] + "\t\t" + splitData(temp)[2], true);
+                            echo(splitData(getAllLine(ITEM_FILE)[i])[0] + "\t" + splitData(
+                                    getAllLine(ITEM_FILE)[i])[1] + "\t\t"
+                                    + splitData(
+                                            getAllLine(ITEM_FILE)[i])[2],
+                                    true);
                         }
                         echo(">>", true);
                         if (windowShopping) {
