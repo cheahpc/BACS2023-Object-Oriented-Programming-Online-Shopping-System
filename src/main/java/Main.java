@@ -197,7 +197,8 @@ public class Main {
                     return true; // Back to Main Menu
             }
         } while (tempStrings[0] == null || tempStrings[1] == null);
-
+        displayInterface(1, 1);
+        echo("", true);
         echo(">> Login Successfull", true);
         echo(">> Welcome Back", true);
         echo("", true);
@@ -257,7 +258,7 @@ public class Main {
             tempStrings[9] = String.format("%s:%s:%s:%s:%s:%s",
                     tempStrings[0], tempStrings[1], tempStrings[2], tempStrings[3], tempStrings[4], tempStrings[5]);
             setLine(tempStrings[9], ACCOUNT_FILE); // Write new account info to the file
-            echo("------------------------------------------------------------------", true);
+            displayInterface(1, 2);
             echo("", true);
             echo(">> User Account Created", true);
             echo(">> Welcome to Number 3 Boba", true);
@@ -293,7 +294,7 @@ public class Main {
                     tempStrings[0] = null; // Reset temporary var
                     return true; // Back to main menu
             }
-            echo("------------------------------------------------------------------", true);
+            displayInterface(1, 3);
             echo("", true);
             echo(">> Login Successfull", true);
             echo(">> Welcome Back", true);
@@ -314,8 +315,7 @@ public class Main {
     }
 
     public static boolean runA_GuestSignUp() {
-        tempStrings[3] = String.valueOf(getFileSize(GUEST_FILE));
-
+        tempStrings[3] = String.valueOf(getFileSize(GUEST_FILE)); // Set the next Guest ID base on file
         GuestSignUp: do {
             switch (getOption(1, 4)) {
                 case 1: // Guest Sign Up - Set Full Name
@@ -343,7 +343,7 @@ public class Main {
             tempStrings[9] = String.format("%s:%s:%s:%s",
                     tempStrings[3], tempStrings[0], tempStrings[1], tempStrings[2]);
             setLine(tempStrings[9], GUEST_FILE); // Write new account info to the file
-            echo("------------------------------------------------------------------", true);
+            displayInterface(1, 3);
             echo("", true);
             echo(">> Sign Up Successful", true);
             echo(">> Welcome to Number 3 Boba", true);
@@ -389,11 +389,16 @@ public class Main {
                     return;
             }
         } while (tempStrings[0] == null);
-        // TODO Show Order Details
-
-        tempStrings[9] = String.format("%s_%s_%s.txt", currentCustomer.getUserID(),
-                splitData(getLine(tempStrings[0], 0, ORDER_FILE)), tempStrings[0]);// Set file name to retrieve order
-                                                                                   // details
+        // Set file name to retrieve order file
+        if (currentCustomer instanceof Guest) {
+            tempStrings[9] = String.format("Guest_%s_%s_%s.txt", currentCustomer.getUserID(),
+                    splitData(getLine(tempStrings[0], 0, ORDER_FILE))[1], tempStrings[0]);
+        } else if (currentCustomer instanceof RegisteredCustomer) {
+            tempStrings[9] = String.format("User_%s_%s_%s.txt", currentCustomer.getUserID(),
+                    splitData(getLine(tempStrings[0], 0, ORDER_FILE))[1], tempStrings[0]);
+        }
+        // TODO Level B Show Order Details-----------------------------------------
+        displayInterface(2, 12);
         contin1uePrompt(); // Pause for the user to check order details
         tempStrings[0] = null; // Reset Order ID for temp string
         return;
@@ -584,7 +589,7 @@ public class Main {
                         echo(">> Please enter 1. ORDER ID: ", false);
                         break;
                     case 12:
-                        echo(">> Please enter 2. ORDER DATE: ", false);
+                        // TODO Design ORDER DETAIL INTERFACE -------------------------------------
                         break;
                 }
                 break;
