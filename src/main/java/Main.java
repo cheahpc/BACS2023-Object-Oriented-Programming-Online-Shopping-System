@@ -21,7 +21,6 @@ public class Main {
     public static final String ITEM_FILE = "item.txt";
     public static final String ORDER_FILE = "order.txt";
     public static String orderFileName = "";
-    public static final int GUEST_SIZE = 99999;
     public static int option;
     public static int itemCounter = 0;
     public static String userInput;
@@ -312,12 +311,8 @@ public class Main {
     }
 
     public static boolean runA_GuestSignUp() {
-        for (int i = 1; i < GUEST_SIZE; i++) {
-            if (getLine(String.valueOf(i), 0, GUEST_FILE).equals("")) {
-                tempStrings[3] = String.valueOf(i);
-                break;
-            }
-        }
+        tempStrings[3] = String.valueOf(getFileSize(GUEST_FILE));
+
         GuestSignUp: do {
             switch (getOption(1, 4)) {
                 case 1: // Guest Sign Up - Set Full Name
