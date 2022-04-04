@@ -1,3 +1,4 @@
+
 public class Guest extends Customer {
     // Data Properties
     private String guestID;
@@ -10,7 +11,6 @@ public class Guest extends Customer {
     public Guest(String fullName, String contactNo, String address, String guestID) {
         super(fullName, contactNo, address);
         this.guestID = guestID;
-        // TODO Set automatic Guest ID Generator
     }
 
     // Setter
@@ -23,5 +23,20 @@ public class Guest extends Customer {
         return guestID;
     }
     // endregion STANDARD
+
+    // Method
+    public String toString() {
+        return String.format("Guest ID: %s\nFull name: %s\nContact Number: %s\nAddress: %s\n", guestID, getFullName(),
+                getContactNo(), getAddress());
+    }
+
+    public String getUserID() {
+        return getGuestID();
+    }
+
+    public void reset() {
+        super.reset();
+        this.guestID = null;
+    }
 
 }

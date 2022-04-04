@@ -40,11 +40,22 @@ public class Customer {
     public String getAddress() {
         return address;
     }
+
     // endregion STANDARD
 
     // Method
     public String toString() {
-        // TODO To String Methods for Customer Class and subclasses for customer
+        return String.format("Full name: %s\nContact No: %s\nAddress: %s\n", getFullName(), getContactNo(),
+                getAddress());
+    }
+
+    public void reset() {
+        this.fullName = null;
+        this.contactNo = null;
+        this.address = null;
+    }
+
+    public String getUserID() {
         return "";
     }
 }

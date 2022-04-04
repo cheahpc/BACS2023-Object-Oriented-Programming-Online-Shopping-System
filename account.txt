@@ -1,15 +1,4 @@
-HashimPalmer:BZV87HWK2KI:1-658-922-3955:203-7897 Tempor Street:et@icloud.org
-RanaStark:OQX45OGS5BH:1-770-526-8603:6769 Malesuada Road:sem@yahoo.net
-NicoleHodges:MRQ34WXX3XQ:414 417-4687:Ap #362-5715 Non St.:lorem.sit.amet@hotmail.org
-DanaGrimes:LYC22WKK9VV:747 903-9471:292 Dui Rd.:faucibus.leo@yahoo.edu
-TaraBeard:UBQ12ELR8LJ:513 367-7212:Ap #412-2665 Sed St.:est.mollis.non@yahoo.com
-Colette Ferrell:DOT38CUN4LQ:1-514-486-7362:761-1801 Phasellus Rd.:tincidunt@protonmail.com
-XylaWood:KQO33PCE2UG:1-755-544-4215:Ap #516-3638 Egestas Rd.:at.iaculis@aol.com
-IvorWise:JIY87RYP5OF:438 779-7543:771-4294 Duis Rd.:orci@google.edu
-RobinCarney:WKW46VNU6PD:644 578-6410:Ap #696-9806 Purus. St.:lorem@aol.net
-SukiDavis:DKV10ZGE5XC:1-669-257-5382:6545 Odio Rd.:erat.eget@hotmail.org
-
 userName : password : fullName : contactNo : email : address
 ironman12345:Ironm4n@toronto:Kenny Teh:0124560728:et@icloud.org:6769 Malesuada Road
+CheahPC11:qw12QW!@:Cheah Pin Chee:0109929399:Mr.chee37@gmail.com:123-7-2 Wisma KGN, Weld Quay 10300, Pulau Pinang
 
-guestID : fullName : contactNo : address

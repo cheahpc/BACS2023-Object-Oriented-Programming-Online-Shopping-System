@@ -1,0 +1,14 @@
+GuestID:FullName:ContactNumber:Address
+1:Cheah Pin Chee:0108845882:3630 G Lrg 2 Off Jalan Rock Taman Timberland Kuching Malays
+2:Tan Mei Li:0142233456:21 Jln Pandamaran Kampung Baru Pendamaran Pelabuhan Pelabuhan
+3:Desmond Chew:0109928375:B 46 Lrg Rahim Kajai 14 Taman Tun Dr Ismail
+4:Darius Tan:0102234535:22 Jln Perdana 4/8 Taman Pandan Perdana
+5:Tan Ai kei:0128847557:6634 G JLN PENDING Kuching
+6:Johnson Liew:0198282832:19 Jln Pengkalan Indah 2 Bandar Pengkalan Indah
+7:Kong Wei Kean:0159959339:6634 G JLN PENDING Kuching
+8:Jasmine Kuok:0198765432:22 Jln Perdana 4/8 Taman Pandan Perdana
+9:Sophia Gan:0121234567:6634 G JLN PENDING Kuching
+10:Kean keong:0129876543:22 Jln Perdana 4/8 Taman Pandan Perdana
+11:Kok Xue Lee:0124455678:ailing taman ho peng, kedah
+12:Random Name:01234343434:Random Address, Random City
+13:Cheah Pin Chee:0124500675:Penang, Georgetown

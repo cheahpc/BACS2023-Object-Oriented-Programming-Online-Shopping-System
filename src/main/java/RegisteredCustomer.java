@@ -45,4 +45,20 @@ public class RegisteredCustomer extends Customer {
     // endregion STANDARD
 
     // Method
+    public String toString() {
+        return (String.format(
+                "User Name: %s\nPassword: %s\nFull Name: %s\nContact Number: %s\nEmail: %s\nAddress: %s\n", userName,
+                password, getFullName(), getContactNo(), email, getAddress()));
+    }
+
+    public String getUserID() {
+        return getUserName();
+    }
+
+    public void reset() {
+        super.reset();
+        this.userName = null;
+        this.password = null;
+        this.email = null;
+    }
 }

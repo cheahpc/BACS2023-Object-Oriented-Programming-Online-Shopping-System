@@ -4,9 +4,12 @@ import java.util.Date;
 public class Payment {
 
     // data properties
-    protected double totalFees, amount;
+    int max = 999999, min = 100000;
+    protected int referenceNo = (int) (Math.random() * (max - min + 1) + min);
+    protected int codeTAC = (int) (Math.random() * (max - min + 1) + min);
+    protected double totalFees = 1000.00, discountFees;
     protected Date dateCreated;
-    protected String referenceID, status, transactionType;
+    protected String status, transactionType;
 
     // no arg constructor
     public Payment() {
@@ -14,22 +17,17 @@ public class Payment {
     }
 
     // arg constructor
-    public Payment(double totalFees, double amount, String status, String transactionType, String referenceID) {
+    public Payment(double totalFees, double discountFees, String status, String transactionType) {
         this.totalFees = totalFees;
-        this.amount = amount;
+        this.discountFees = discountFees;
         this.status = status;
         this.transactionType = transactionType;
-        this.referenceID = referenceID;
         dateCreated = new java.util.Date();// system generated user can't modify
     }
 
     // setter
     public void setTotalFees(double totalFees) {
         this.totalFees = totalFees;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 
     public void setTransactionType(String transactionType) {
@@ -40,8 +38,8 @@ public class Payment {
         this.status = status;
     }
 
-    public void setReferenceID(String referenceID) {
-        this.referenceID = referenceID;
+    public void setDiscountFees(double discountFees) {
+        this.discountFees = discountFees;
     }
 
     // getter
@@ -49,8 +47,16 @@ public class Payment {
         return totalFees;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getDiscountFees() {
+        return discountFees;
+    }
+
+    public int getCodeTAC() {
+        return codeTAC;
+    }
+
+    public int getReferenceNo() {
+        return referenceNo;
     }
 
     public String getTransactionType() {
@@ -61,24 +67,43 @@ public class Payment {
         return status;
     }
 
-    public String getReferenceID() {
-        return referenceID;
+    // method
+    public String output() {
+        return String.format("------------------------------------------------------------------\n" +
+                "                 Transaction of Ordering System                   \n" +
+                "------------------------------------------------------------------\n" +
+                ">> Payment Option/Method :                                        \n" +
+                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+                ">>    1.      E-Wallet                                            \n" +
+                ">>    2.      Bank                                                \n" +
+                ">>                                                                \n" +
+                ">>    0.      Exit                                                \n" +
+                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     }
 
-    // method
-    public boolean transaction() {
-        if (amount == totalFees) {
-            totalFees -= amount;
+    public boolean verification(int noTAC) {
+        if (codeTAC == noTAC) {
+            status = "Successful";
             return true;
-        } else
+        } else {
+            status = "Unsuccessful";
             return false;
+        }
+    }
+
+    public double calTotalFees() {
+        return (totalFees - discountFees);
     }
 
     public String receipt() {
-        return String.format("Status : %s\n"
-                + "Date Created: %s\n"
-                + "Transaction type: %s"
-                + "\n Total Fees: RM%.2f"
-                + "\n Amount Fees: RM%.2f", status, dateCreated, transactionType, totalFees, amount);
+        return String.format("------------------------------------------------------------------\n" +
+                "                        Transaction Receipt                       \n" +
+                "------------------------------------------------------------------\n" +
+                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+                ">> Transaction type    : %s                                       \n" +
+                ">> Reference Number    : %d                                       \n" +
+                ">> Status              : %s                                       \n" +
+                ">> Date Created        : %s                                       \n", transactionType, referenceNo,
+                status, dateCreated);
     }
 }
