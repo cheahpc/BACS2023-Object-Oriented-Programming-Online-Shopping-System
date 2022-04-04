@@ -36,7 +36,7 @@ public class Main {
     static Date date = new Date();
 
     public static void main(String[] args) {
-
+        // region DEBUG
         // boolean Start = false;
         boolean Start = true;
 
@@ -49,16 +49,12 @@ public class Main {
             // "0192929100", "MR.CHEAH@LIVE.COM", "random 123, penang");
             // currentOrder = new Order("101", currentCustomer, payment,
             // dateFormat.format(date), "Pass");
-            // if (currentCustomer instanceof Guest) {
-            // echo("This is a Guest account\n", true);
-            // } else if (currentCustomer instanceof RegisteredCustomer) {
-            // echo("This is a User account\n", true);
-            // }
-            tempStrings[0] = "3";
-            echo(getLine(tempStrings[0], 0, ORDER_FILE), true);
-            // echo(splitData(getLine(tempStrings[0], 0, ORDER_FILE))[2], true);
 
+            for (int i = 1; i < getFileSize(GUEST_FILE); i++) {
+                echo(getAllLine(GUEST_FILE)[i], true);
+            }
         }
+        // endregion DEBUG
 
         LevelA: while (Start) {
 
@@ -130,26 +126,30 @@ public class Main {
                 switch (option = getOption(3, 0)) {
 
                     case 101: // Check Order
-                        // TODO Level C Algorithm for check order
-
+                        if (windowShopping) {
+                            continue LevelA;
+                        } else {
+                            // TODO Level C Algorithm for check order
+                        }
                         break;
                     case 102: // USer Choose Track Order
                         // TODO Algorithm for Track Order
 
                         break;
-                    case 103: // USer Choose Sign Out
-                        continue LevelC;
-
+                    case 103: // User Choose back
+                        if (windowShopping) {
+                            msgBox("Invalid option", "Input Denied", 0);
+                            break;
+                        } else {
+                            continue LevelC;
+                        }
                     default:
-                        // TODO Level C Sum up something new
-                        // No : Order ID : Item ID : Item Name : Item Price : Qty
-                        tempStrings[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
-                        product = new Product(splitData(tempStrings[9])[1], splitData(tempStrings[9])[2],
-                                Double.parseDouble(splitData(tempStrings[9])[3])); // Set product product object
-
-                        tempStrings[4] = dateFormat.format(date);
-                        itemCounter += 1;
-                        setLine(tempStrings[8], orderFileName);
+                        if (!windowShopping) {
+                            runC_SetProductQty();
+                            break;
+                        }
+                        msgBox("Unable to select a product.\nPlease login as a user or guest to select a product.",
+                                "Windows Shopping Only", 1);
                         break;
                 }
             }
@@ -406,6 +406,36 @@ public class Main {
 
     // endregion MENU Function B
 
+    // region MENU FUNCTION C
+    public static void runC_SetProductQty() {
+        do {
+
+            if (getLine(String.valueOf(option), 0, ITEM_FILE) == "") {
+                // If user enter product id that does not exist
+                msgBox("Item Not available", "Invalid Item Choice", 0); // Error message
+            } else {
+                // TODO LEVEL C check getInput
+                int quantity = Integer.parseInt(getInput(3, 3, 0)); // Prompt user for quantity input
+                if (quantity == 0) { // If user enter 0 quantity
+                    msgBox("Quantity cannot be 0", "Invalid Quantity", 0);
+                } else {
+
+                }
+            }
+
+            // No : Order ID : Item ID : Item Name : Item Price : Qty
+            tempStrings[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
+            product = new Product(splitData(tempStrings[9])[1], splitData(tempStrings[9])[2],
+                    Double.parseDouble(splitData(tempStrings[9])[3])); // Set product product object
+
+            tempStrings[4] = dateFormat.format(date);
+            itemCounter += 1;
+            setLine(tempStrings[8], orderFileName);
+        } while (true);
+
+    }
+    // endregion MENU FUNCTION C
+
     // region DISPLAY
     public static void clearScreen() {
         // System.out.print("\033[H\033[2J");
@@ -589,6 +619,13 @@ public class Main {
                         echo(">> Please enter 1. ORDER ID: ", false);
                         break;
                     case 12:
+                        echo("------------------------------------------------------------------", true);
+                        echo("                           Order Detail                           ", true);
+                        echo("------------------------------------------------------------------", true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">>", true);
+                        // No : Order ID : Item ID : Item Name : Item Price : Qty
+                        // ORDER : Status : Status Date
                         // TODO Design ORDER DETAIL INTERFACE -------------------------------------
                         break;
                 }
@@ -623,13 +660,12 @@ public class Main {
                         }
                         echo(">>", true);
                         if (windowShopping) {
-
+                            echo(">>   101.      Back", true);
                         } else {
                             echo(">>   101.      View Cart", true);
                             echo(">>   102.      Proceed to payment", true);
                             echo(">>   103.      Back", true);
                         }
-
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
                         echo(">> Choose an option: ", false);
@@ -640,6 +676,45 @@ public class Main {
                     case 2: // Checkout Page
                         // TODO INTERFACE DESIGN - Checkout page
                         break;
+                    case 30: // Ask user for quantity
+                        echo("------------------------------------------------------------------", true);
+                        echo("                        Number 3 Bubble Tea                       ", true);
+                        echo("------------------------------------------------------------------", true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        if (currentCustomer instanceof RegisteredCustomer) {
+                            echo(">> Current User: " + currentCustomer.getUserID(), false);
+                        } else if (currentCustomer instanceof Guest) {
+                            echo(">> Guest ID    : " + currentCustomer.getUserID(), false);
+                        }
+                        // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
+                        echo(">> Cart Ammount: ", false);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">>    No        Product                 Price", true);
+                        for (int i = 0; i < getFileSize(ITEM_FILE); i++) {
+                            if (i < 9) {
+                                echo(">>     ", false);
+                            } else {
+                                echo(">>    ", false);
+                            }
+                            echo(splitData(getAllLine(ITEM_FILE)[i])[0] + "\t" + splitData(
+                                    getAllLine(ITEM_FILE)[i])[1] + "\t\t"
+                                    + splitData(
+                                            getAllLine(ITEM_FILE)[i])[2],
+                                    true);
+                        }
+                        echo(">>", true);
+                        if (windowShopping) {
+
+                        } else {
+                            echo(">>   101.      View Cart", true);
+                            echo(">>   102.      Proceed to payment", true);
+                            echo(">>   103.      Back", true);
+                        }
+
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">>", true);
+                        echo(">> Enter a quantity: ", false);
+                        ;
 
                     default:
                         break;
@@ -757,7 +832,22 @@ public class Main {
                 }
                 break;
             case 3:
-                // TODO Shopping Menu Error Message
+                // TODO LEVEL C ERROR MESSAGE
+                switch (level2) {
+                    case 3:
+                        switch (level3) {
+                            case 0:
+                                message = "Input option denied";
+                                title = "Invalid Input";
+                                break;
+
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
                 break;
         }
 
@@ -879,6 +969,15 @@ public class Main {
                         return true; // Default return value when no ID detected
                 }
                 break;
+            case 3:
+                switch (inputID) {
+                    case 1:
+                        regExPat = Pattern.compile("[0-9]{1,3}");
+                        break;
+
+                    default:
+                        break;
+                }
             default:
                 return true; // Default return value when no ID detected
         }
