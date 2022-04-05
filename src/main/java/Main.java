@@ -129,13 +129,15 @@ public class Main {
                         if (windowShopping) {
                             continue LevelA;
                         } else {
-                            runC_ViewCart();
+                            displayInterface(3, 1);
+                            continuePrompt();
                         }
                         break;
                     case 102: // Checkout
                         if (windowShopping) {
                             continue LevelA;
                         } else {
+
                             // TODO LEVEL C Algorithm for CHECK OUT
                         }
                         break;
@@ -218,7 +220,7 @@ public class Main {
         echo("", true);
         Arrays.fill(tempStr, null); // Reset Array
         windowShopping = false; // Set windows shopping to false
-        contin1uePrompt();
+        continuePrompt();
         return false; // Continue to next section
     }
 
@@ -278,7 +280,7 @@ public class Main {
             echo("", true);
             Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
-            contin1uePrompt();
+            continuePrompt();
             return false; // Continue to next section
         } while (true);
     }
@@ -313,7 +315,7 @@ public class Main {
             echo("", true);
             Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
-            contin1uePrompt();
+            continuePrompt();
             return false; // Continue to next section
         } while (true);
     }
@@ -361,7 +363,7 @@ public class Main {
             echo("", true);
             Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
-            contin1uePrompt();
+            continuePrompt();
             return false; // Continue to next section
         } while (true);
     }
@@ -411,7 +413,7 @@ public class Main {
         displayInterface(2, 12);
         Arrays.fill(tempStr, null); // Reset Array
         theOrder.reset();
-        contin1uePrompt(); // Pause for the user to check order details
+        continuePrompt(); // Pause for the user to check order details
 
         return;
     }
@@ -438,7 +440,6 @@ public class Main {
                     continue SetQty;
                 } else {
                     itemCounter++;
-                    // TODO write quantity and item details to the file
                     // Set the order list format
                     tempStr[9] = String.format("%d:%s:%s:%s:%d", itemCounter, theProduct.getProductID(),
                             theProduct.getproductName(), theProduct.getproductPrice(), quantity);
@@ -450,9 +451,6 @@ public class Main {
         } while (true);
     }
 
-    public static void runC_ViewCart() {
-
-    }
     // endregion MENU FUNCTION C
 
     // region DISPLAY
@@ -666,14 +664,57 @@ public class Main {
                             subAmount = Double.parseDouble(tempStr[6]) * Integer.parseInt(tempStr[5]);
                             totalAmount += subAmount;
                             // Set the display format
-                            if (i < 10) {
-                                tempStr[4] = String.format(">>\t %s\t      %s\t\t%s\t%s\t\t%s\tRM %.2f", tempStr[9],
-                                        tempStr[8],
-                                        tempStr[7], tempStr[6], tempStr[5], subAmount);
-                            } else {
-                                tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\tRM %.2f", tempStr[9],
-                                        tempStr[8],
-                                        tempStr[7], tempStr[6], tempStr[5], subAmount);
+                            if (Integer.parseInt(tempStr[9]) < 10) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t %s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t %s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t %s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
+                            } else if (Integer.parseInt(tempStr[9]) < 100) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t%s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t%s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
+                            } else if (Integer.parseInt(tempStr[9]) < 1000) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t%s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t%s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
                             }
                             // Display the list
                             echo(tempStr[4], true);
@@ -700,7 +741,6 @@ public class Main {
             case 3: // Shop Item Module
                 switch (levelB) {
                     case 0:
-
                         echo("------------------------------------------------------------------", true);
                         echo("                        Number 3 Bubble Tea                       ", true);
                         echo("------------------------------------------------------------------", true);
@@ -738,7 +778,96 @@ public class Main {
                         echo(">> Choose an option: ", false);
                         break;
                     case 1: // View Cart
-                        // TODO INTERFACE DESIGN - View Cart page
+                        echo("------------------------------------------------------------------", true);
+                        echo("                          Shopping Cart                           ", true);
+                        echo("------------------------------------------------------------------", true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">> Order ID   : " + theOrder.getOrderID(), true);
+                        echo(">> Order Date : " + theOrder.getOrderDate(), true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">>", true);
+                        echo(">>\tNo\tItem ID\t\tItem Name\tItem Price(RM)\tQty\tAmount(RM)", true);
+                        double subAmount = 0, totalAmount = 0;
+                        int statusCount = 0;
+                        // Count number of status
+                        for (int i = 0; i < getFileSize(orderFileName); i++) {
+                            if (splitData(getAllLine(orderFileName)[i])[0].equals("ORDER")) {
+                                statusCount += 1;
+                            }
+                        }
+                        // Display order list
+                        for (int i = 0; i < getFileSize(orderFileName) - statusCount; i++) {
+                            tempStr[9] = splitData(getAllLine(orderFileName)[i])[0]; // Set List No
+                            tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Item ID
+                            tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Item Name
+                            tempStr[6] = splitData(getAllLine(orderFileName)[i])[3]; // Set Item Price
+                            tempStr[5] = splitData(getAllLine(orderFileName)[i])[4]; // Set Item Qty
+                            // Calculate total and subtotal
+                            subAmount = Double.parseDouble(tempStr[6]) * Integer.parseInt(tempStr[5]);
+                            totalAmount += subAmount;
+                            // Set the display format
+                            if (Integer.parseInt(tempStr[9]) < 10) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t %s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t %s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t %s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
+                            } else if (Integer.parseInt(tempStr[9]) < 100) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t%s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t%s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
+                            } else if (Integer.parseInt(tempStr[9]) < 1000) {
+                                if (Integer.parseInt(tempStr[8]) < 10) {
+                                    tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 100) {
+                                    tempStr[4] = String.format(">>\t%s\t     %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                } else if (Integer.parseInt(tempStr[8]) < 1000) {
+                                    tempStr[4] = String.format(">>\t%s\t    %s\t\t%s\t%s\t\t%s\t%.2f",
+                                            tempStr[9],
+                                            tempStr[8],
+                                            tempStr[7], tempStr[6], tempStr[5], subAmount);
+                                }
+                            }
+                            // Display the list
+                            echo(tempStr[4], true);
+                        }
+                        // Display order total and order status
+                        echo(">>", true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(String.format(">> Cart Total        : RM %.2f", totalAmount), true);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo("", true);
+                        Arrays.fill(tempStr, null); // Reset Array
                         break;
                     case 2: // Checkout Page
                         // TODO INTERFACE DESIGN - Checkout page
@@ -903,7 +1032,7 @@ public class Main {
     // endregion GET OPTION
 
     // region INPUT
-    public static void contin1uePrompt() {
+    public static void continuePrompt() {
         System.out.println("Press {Enter} key to continue!"); // Print prompt message
         try {
             sc.nextLine(); // Read input
