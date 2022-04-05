@@ -11,9 +11,9 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderID, Customer customerDeails, Payment payment, String orderDate, String orderStatus) {
+    public Order(String orderID, Customer customerDetails, Payment payment, String orderDate, String orderStatus) {
         this.orderID = orderID;
-        this.customerDetails = customerDeails;
+        this.customerDetails = customerDetails;
         this.payment = payment;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
@@ -68,5 +68,13 @@ public class Order {
         return String.format(
                 "Order ID: %s\nOrder Date: %s\nOrder Status: %s\n\n-Customer Details- \n%s\n-Payment Details-\n%s\n",
                 orderID, orderDate, orderStatus, customerDetails, payment);
+    }
+
+    public void reset() {
+        orderID = null;
+        orderDate = null;
+        orderStatus = null;
+        customerDetails = null;
+        payment = null;
     }
 }

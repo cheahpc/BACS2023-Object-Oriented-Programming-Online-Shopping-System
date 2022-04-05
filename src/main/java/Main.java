@@ -24,12 +24,12 @@ public class Main {
     public static int option;
     public static int itemCounter = 0;
     public static String userInput;
-    public static String[] tempStrings = new String[10];
+    public static String[] tempStr = new String[10];
     public static boolean windowShopping = false;
     public static boolean loopVal = true;
     public static Scanner sc = new Scanner(System.in);
-    static Customer currentCustomer;
-    static Order currentOrder;
+    static Customer theCust;
+    static Order theOrder;
     static Product product;
     static Payment payment;
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -101,7 +101,7 @@ public class Main {
                         break;
 
                     case 3: // USer Choose Sign Out
-                        currentCustomer.reset();
+                        theCust.reset();
                         continue LevelA; /// Back to top layer
                     default:
                         break;
@@ -111,12 +111,10 @@ public class Main {
 
             // region Level 3 - Shopping
             if (!windowShopping) {
-                // TODO Generate ORDER ID
-                currentOrder = new Order(String.valueOf(getFileSize(ORDER_FILE)), currentCustomer, payment,
-                        dateFormat.format(date),
+                theOrder = new Order(String.valueOf(getFileSize(ORDER_FILE)), theCust, payment, todayDate(),
                         "Pending Payment");
 
-                echo(currentOrder.toString(), true); // Debug?
+                echo(theOrder.toString(), true); // Debug?
                 orderFileName = getOrderFileName(); // Set order file name for the customer
                 fileCreate(orderFileName); // Create the order file for the customer
             }
@@ -167,52 +165,52 @@ public class Main {
         UserLogin: do {
             switch (getOption(1, 1)) {
                 case 1: // User Choose 1 - User Name
-                    tempStrings[0] = getInput(1, 1, 1); // Enter UserName
+                    tempStr[0] = getInput(1, 1, 1); // Enter UserName
                     // If user name is not found
-                    if (getLine(tempStrings[0], 0, ACCOUNT_FILE) == "") {
+                    if (getLine(tempStr[0], 0, ACCOUNT_FILE) == "") {
                         // Print user not found message
-                        msgBox("Account not found with username: " + tempStrings[0],
+                        msgBox("Account not found with username: " + tempStr[0],
                                 "User Does Not Exist", 1);
-                        tempStrings[0] = null; // Reset the temp var
+                        tempStr[0] = null; // Reset the temp var
                     }
                     break;
                 case 2: // User Choose 2 - Password
-                    if (tempStrings[0] == null) { // If no user name is empty
+                    if (tempStr[0] == null) { // If no user name is empty
                         // Prompt user to input user name first
                         msgBox("Please input user name first.", "User Name Is Empty", 1);
                         continue UserLogin;
                     } else {
-                        tempStrings[1] = getInput(1, 1, 2); // Enter Password
-                        tempStrings[2] = splitData(getLine(tempStrings[0], 0, ACCOUNT_FILE))[1];
+                        tempStr[1] = getInput(1, 1, 2); // Enter Password
+                        tempStr[2] = splitData(getLine(tempStr[0], 0, ACCOUNT_FILE))[1];
                         // If password is worng
-                        if (!tempStrings[1].equals(tempStrings[2])) {
+                        if (!tempStr[1].equals(tempStr[2])) {
                             // Print wrong password message
                             msgBox("Wrong password", "Password Incorrect", 0);
-                            tempStrings[1] = null; // Reset password field
+                            tempStr[1] = null; // Reset password field
                         }
                     }
                     break;
                 case 3: // User Choose 3 - Back
-                    Arrays.fill(tempStrings, null); // Reset Array
+                    Arrays.fill(tempStr, null); // Reset Array
                     return true; // Back to Main Menu
             }
-        } while (tempStrings[0] == null || tempStrings[1] == null);
+        } while (tempStr[0] == null || tempStr[1] == null);
         displayInterface(1, 1);
         echo("", true);
         echo(">> Login Successfull", true);
         echo(">> Welcome Back", true);
         echo("", true);
-        tempStrings[9] = getLine(tempStrings[0], 0, ACCOUNT_FILE);
-        currentCustomer = new RegisteredCustomer(
-                splitData(tempStrings[9])[2],
-                splitData(tempStrings[9])[3],
-                splitData(tempStrings[9])[5],
-                splitData(tempStrings[9])[0],
-                splitData(tempStrings[9])[1],
-                splitData(tempStrings[9])[4]);
-        echo(currentCustomer.toString(), true);
+        tempStr[9] = getLine(tempStr[0], 0, ACCOUNT_FILE);
+        theCust = new RegisteredCustomer(
+                splitData(tempStr[9])[2],
+                splitData(tempStr[9])[3],
+                splitData(tempStr[9])[5],
+                splitData(tempStr[9])[0],
+                splitData(tempStr[9])[1],
+                splitData(tempStr[9])[4]);
+        echo(theCust.toString(), true);
         echo("", true);
-        Arrays.fill(tempStrings, null); // Reset Array
+        Arrays.fill(tempStr, null); // Reset Array
         windowShopping = false; // Set windows shopping to false
         contin1uePrompt();
         return false; // Continue to next section
@@ -222,57 +220,57 @@ public class Main {
         CreateAccount: do {
             switch (getOption(1, 2)) {
                 case 1: // Create New User Account - Set User name
-                    tempStrings[0] = getInput(1, 2, 1);
+                    tempStr[0] = getInput(1, 2, 1);
                     // If user name is found
-                    if (getLine(tempStrings[0], 0, ACCOUNT_FILE) != "") {
-                        msgBox("User name " + tempStrings[0] + " already taken: ", "User Name Already Taken", 1);
-                        tempStrings[0] = null; // Reset the temp var
+                    if (getLine(tempStr[0], 0, ACCOUNT_FILE) != "") {
+                        msgBox("User name " + tempStr[0] + " already taken: ", "User Name Already Taken", 1);
+                        tempStr[0] = null; // Reset the temp var
                     }
                     break;
                 case 2: // Create New User Account - Set Password
-                    tempStrings[1] = getInput(1, 2, 2);
+                    tempStr[1] = getInput(1, 2, 2);
                     break;
                 case 3: // Create New User Account - Set Full name
-                    tempStrings[2] = getInput(1, 2, 3);
+                    tempStr[2] = getInput(1, 2, 3);
                     break;
                 case 4: // Create New User Account - Set Contact number
-                    tempStrings[3] = getInput(1, 2, 4);
+                    tempStr[3] = getInput(1, 2, 4);
                     break;
                 case 5: // Create New User Account - Set Email
-                    tempStrings[4] = getInput(1, 2, 5);
+                    tempStr[4] = getInput(1, 2, 5);
                     break;
                 case 6: // Create New User Account - Set Address
-                    tempStrings[5] = getInput(1, 2, 6);
+                    tempStr[5] = getInput(1, 2, 6);
                     break;
                 case 7: // back to previous menu
-                    Arrays.fill(tempStrings, null); // Reset Array
+                    Arrays.fill(tempStr, null); // Reset Array
                     return true; // Back to main menu
             }
             // Check for empty string,
             for (int i = 0; i < 6; i++) {
-                if (tempStrings[i] == null) {
+                if (tempStr[i] == null) {
                     // Continue with this menu if there are empty field
                     continue CreateAccount;
                 }
             }
-            tempStrings[9] = String.format("%s:%s:%s:%s:%s:%s",
-                    tempStrings[0], tempStrings[1], tempStrings[2], tempStrings[3], tempStrings[4], tempStrings[5]);
-            setLine(tempStrings[9], ACCOUNT_FILE); // Write new account info to the file
+            tempStr[9] = String.format("%s:%s:%s:%s:%s:%s",
+                    tempStr[0], tempStr[1], tempStr[2], tempStr[3], tempStr[4], tempStr[5]);
+            setLine(tempStr[9], ACCOUNT_FILE); // Write new account info to the file
             displayInterface(1, 2);
             echo("", true);
             echo(">> User Account Created", true);
             echo(">> Welcome to Number 3 Boba", true);
             echo("", true);
-            currentCustomer = new RegisteredCustomer(
-                    splitData(tempStrings[9])[2],
-                    splitData(tempStrings[9])[3],
-                    splitData(tempStrings[9])[5],
-                    splitData(tempStrings[9])[0],
-                    splitData(tempStrings[9])[1],
-                    splitData(tempStrings[9])[4]);
-            echo(currentCustomer.toString(), true);
+            theCust = new RegisteredCustomer(
+                    splitData(tempStr[9])[2],
+                    splitData(tempStr[9])[3],
+                    splitData(tempStr[9])[5],
+                    splitData(tempStr[9])[0],
+                    splitData(tempStr[9])[1],
+                    splitData(tempStr[9])[4]);
+            echo(theCust.toString(), true);
             echo("", true);
-            Arrays.fill(tempStrings, null); // Reset Array
+            Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
             contin1uePrompt();
             return false; // Continue to next section
@@ -283,15 +281,15 @@ public class Main {
         GuestLogin: do {
             switch (getOption(1, 3)) {
                 case 1: // Guest Loin - Set Guest ID
-                    tempStrings[0] = getInput(1, 3, 1); // Get the ID from use
-                    if (getLine(tempStrings[0], 0, GUEST_FILE) == "") { // If ID not found
+                    tempStr[0] = getInput(1, 3, 1); // Get the ID from use
+                    if (getLine(tempStr[0], 0, GUEST_FILE) == "") { // If ID not found
                         msgBox("Guest ID not registered in System.", "Invalid Guest ID", 1);
-                        tempStrings[0] = null; // Reset the temp var
+                        tempStr[0] = null; // Reset the temp var
                         continue GuestLogin;
                     }
                     break;
                 case 2: // back to previous menu
-                    tempStrings[0] = null; // Reset temporary var
+                    tempStr[0] = null; // Reset temporary var
                     return true; // Back to main menu
             }
             displayInterface(1, 3);
@@ -299,15 +297,15 @@ public class Main {
             echo(">> Login Successfull", true);
             echo(">> Welcome Back", true);
             echo("", true);
-            tempStrings[9] = getLine(tempStrings[0], 0, GUEST_FILE);
-            currentCustomer = new Guest(
-                    splitData(tempStrings[9])[1],
-                    splitData(tempStrings[9])[2],
-                    splitData(tempStrings[9])[3],
-                    splitData(tempStrings[9])[0]);
-            echo(currentCustomer.toString(), true);
+            tempStr[9] = getLine(tempStr[0], 0, GUEST_FILE);
+            theCust = new Guest(
+                    splitData(tempStr[9])[1],
+                    splitData(tempStr[9])[2],
+                    splitData(tempStr[9])[3],
+                    splitData(tempStr[9])[0]);
+            echo(theCust.toString(), true);
             echo("", true);
-            Arrays.fill(tempStrings, null); // Reset Array
+            Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
             contin1uePrompt();
             return false; // Continue to next section
@@ -315,47 +313,47 @@ public class Main {
     }
 
     public static boolean runA_GuestSignUp() {
-        tempStrings[3] = String.valueOf(getFileSize(GUEST_FILE)); // Set the next Guest ID base on file
+        tempStr[3] = String.valueOf(getFileSize(GUEST_FILE)); // Set the next Guest ID base on file
         GuestSignUp: do {
             switch (getOption(1, 4)) {
                 case 1: // Guest Sign Up - Set Full Name
-                    tempStrings[0] = getInput(1, 4, 1);
+                    tempStr[0] = getInput(1, 4, 1);
                     break;
                 case 2: // Guest Sign Up - Set Contact Number
-                    tempStrings[1] = getInput(1, 4, 2);
+                    tempStr[1] = getInput(1, 4, 2);
                     break;
                 case 3: // Guest Sign Up - Set Address
-                    tempStrings[2] = getInput(1, 4, 3);
+                    tempStr[2] = getInput(1, 4, 3);
                     break;
                 case 4: // Guest Sign Up - Go Back to previous menu
-                    Arrays.fill(tempStrings, null); // Reset Array
+                    Arrays.fill(tempStr, null); // Reset Array
                     return true; // Back to main menu
             }
 
             // Check for empty string,
             for (int i = 0; i < 3; i++) {
-                if (tempStrings[i] == null) {
+                if (tempStr[i] == null) {
                     // Continue with this menu if there are empty field
                     echo("testing 123 abc debug mode", true);
                     continue GuestSignUp;
                 }
             }
-            tempStrings[9] = String.format("%s:%s:%s:%s",
-                    tempStrings[3], tempStrings[0], tempStrings[1], tempStrings[2]);
-            setLine(tempStrings[9], GUEST_FILE); // Write new account info to the file
+            tempStr[9] = String.format("%s:%s:%s:%s",
+                    tempStr[3], tempStr[0], tempStr[1], tempStr[2]);
+            setLine(tempStr[9], GUEST_FILE); // Write new account info to the file
             displayInterface(1, 3);
             echo("", true);
             echo(">> Sign Up Successful", true);
             echo(">> Welcome to Number 3 Boba", true);
             echo("", true);
-            currentCustomer = new Guest(
-                    splitData(tempStrings[9])[1],
-                    splitData(tempStrings[9])[2],
-                    splitData(tempStrings[9])[3],
-                    splitData(tempStrings[9])[0]);
-            echo(currentCustomer.toString(), true);
+            theCust = new Guest(
+                    splitData(tempStr[9])[1],
+                    splitData(tempStr[9])[2],
+                    splitData(tempStr[9])[3],
+                    splitData(tempStr[9])[0]);
+            echo(theCust.toString(), true);
             echo("", true);
-            Arrays.fill(tempStrings, null); // Reset Array
+            Arrays.fill(tempStr, null); // Reset Array
             windowShopping = false; // Set windows shopping to false
             contin1uePrompt();
             return false; // Continue to next section
@@ -373,34 +371,42 @@ public class Main {
         do {
             switch (getOption(2, 1)) {
                 case 1: // User Choose 1 - Set Order ID
-                    tempStrings[0] = getInput(2, 1, 1); // Get Order ID
-                    if (getLine(tempStrings[0], 0, ORDER_FILE) == "") {
+                    tempStr[0] = getInput(2, 1, 1); // Get Order ID
+                    if (getLine(tempStr[0], 0, ORDER_FILE) == "") {
                         // When Order ID Not found
-                        tempStrings[0] = null;
+                        tempStr[0] = null;
                         msgBox("Order ID does not exist.", "Invalid Order ID", 0);
-                    } else if (!(currentCustomer.getUserID()
-                            .equals(splitData(getLine(tempStrings[0], 0, ORDER_FILE))[2]))) {
+                    } else if (!(theCust.getUserID()
+                            .equals(splitData(getLine(tempStr[0], 0, ORDER_FILE))[2]))) {
                         // When order id found but ID does not belong to this user;
                         msgBox("This Order ID does not exist in your order history.", "No Such Order", 0);
-                        tempStrings[0] = null;
+                        tempStr[0] = null;
                     }
                     break;
                 case 2: // User Choose 3 - Back
                     return;
             }
-        } while (tempStrings[0] == null);
+        } while (tempStr[0] == null);
+
+        // Set order object
+        theOrder = new Order(tempStr[0], theCust, payment,
+                splitData(getLine(tempStr[0], 0, ORDER_FILE))[1],
+                splitData(getLine(tempStr[0], 0, ORDER_FILE))[2]);
+
         // Set file name to retrieve order file
-        if (currentCustomer instanceof Guest) {
-            tempStrings[9] = String.format("Guest_%s_%s_%s.txt", currentCustomer.getUserID(),
-                    splitData(getLine(tempStrings[0], 0, ORDER_FILE))[1], tempStrings[0]);
-        } else if (currentCustomer instanceof RegisteredCustomer) {
-            tempStrings[9] = String.format("User_%s_%s_%s.txt", currentCustomer.getUserID(),
-                    splitData(getLine(tempStrings[0], 0, ORDER_FILE))[1], tempStrings[0]);
+        if (theCust instanceof Guest) {
+            orderFileName = String.format("Guest_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
+                    theOrder.getOrderID());
+        } else if (theCust instanceof RegisteredCustomer) {
+            orderFileName = String.format("User_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
+                    theOrder.getOrderID());
         }
+
+        // Open file and read the file
         // TODO Level B Show Order Details-----------------------------------------
         displayInterface(2, 12);
         contin1uePrompt(); // Pause for the user to check order details
-        tempStrings[0] = null; // Reset Order ID for temp string
+        tempStr[0] = null; // Reset Order ID for temp string
         return;
     }
 
@@ -424,13 +430,13 @@ public class Main {
             }
 
             // No : Order ID : Item ID : Item Name : Item Price : Qty
-            tempStrings[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
-            product = new Product(splitData(tempStrings[9])[1], splitData(tempStrings[9])[2],
-                    Double.parseDouble(splitData(tempStrings[9])[3])); // Set product product object
+            tempStr[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
+            product = new Product(splitData(tempStr[9])[1], splitData(tempStr[9])[2],
+                    Double.parseDouble(splitData(tempStr[9])[3])); // Set product product object
 
-            tempStrings[4] = dateFormat.format(date);
+            tempStr[4] = todayDate(); // Set today date
             itemCounter += 1;
-            setLine(tempStrings[8], orderFileName);
+            setLine(tempStr[8], orderFileName);
         } while (true);
 
     }
@@ -478,8 +484,8 @@ public class Main {
                         echo("                            User Login                            ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    1.      User Name   : " + ((tempStrings[0] == null) ? "" : tempStrings[0]), true);
-                        echo(">>    2.      Password    : " + ((tempStrings[1] == null) ? "" : tempStrings[1]), true);
+                        echo(">>    1.      User Name   : " + ((tempStr[0] == null) ? "" : tempStr[0]), true);
+                        echo(">>    2.      Password    : " + ((tempStr[1] == null) ? "" : tempStr[1]), true);
                         echo(">>", true);
                         echo(">>    3.      Back", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -499,17 +505,17 @@ public class Main {
                         echo("                     Create New User Account                      ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    1.      User Name       : " + ((tempStrings[0] == null) ? "" : tempStrings[0]),
+                        echo(">>    1.      User Name       : " + ((tempStr[0] == null) ? "" : tempStr[0]),
                                 true);
-                        echo(">>    2.      Password        : " + ((tempStrings[1] == null) ? "" : tempStrings[1]),
+                        echo(">>    2.      Password        : " + ((tempStr[1] == null) ? "" : tempStr[1]),
                                 true);
-                        echo(">>    3.      Full Name       : " + ((tempStrings[2] == null) ? "" : tempStrings[2]),
+                        echo(">>    3.      Full Name       : " + ((tempStr[2] == null) ? "" : tempStr[2]),
                                 true);
-                        echo(">>    4.      Contact Number  : " + ((tempStrings[3] == null) ? "" : tempStrings[3]),
+                        echo(">>    4.      Contact Number  : " + ((tempStr[3] == null) ? "" : tempStr[3]),
                                 true);
-                        echo(">>    5.      Email           : " + ((tempStrings[4] == null) ? "" : tempStrings[4]),
+                        echo(">>    5.      Email           : " + ((tempStr[4] == null) ? "" : tempStr[4]),
                                 true);
-                        echo(">>    6.      Address         : " + ((tempStrings[5] == null) ? "" : tempStrings[5]),
+                        echo(">>    6.      Address         : " + ((tempStr[5] == null) ? "" : tempStr[5]),
                                 true);
                         echo(">>", true);
                         echo(">>    7.      Back", true);
@@ -542,7 +548,7 @@ public class Main {
                         echo("                            Guest Login                           ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    1.      Guest ID         : " + ((tempStrings[0] == null) ? "" : tempStrings[0]),
+                        echo(">>    1.      Guest ID         : " + ((tempStr[0] == null) ? "" : tempStr[0]),
                                 true);
                         echo(">>", true);
                         echo(">>    2.      Back", true);
@@ -560,12 +566,12 @@ public class Main {
                         echo("                           Guest Sign Up                          ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    ..      Guest ID        : " + tempStrings[3], true);
-                        echo(">>    1.      Full Name       : " + ((tempStrings[0] == null) ? "" : tempStrings[0]),
+                        echo(">>    ..      Guest ID        : " + tempStr[3], true);
+                        echo(">>    1.      Full Name       : " + ((tempStr[0] == null) ? "" : tempStr[0]),
                                 true);
-                        echo(">>    2.      Contact Number  : " + ((tempStrings[1] == null) ? "" : tempStrings[1]),
+                        echo(">>    2.      Contact Number  : " + ((tempStr[1] == null) ? "" : tempStr[1]),
                                 true);
-                        echo(">>    3.      Address         : " + ((tempStrings[2] == null) ? "" : tempStrings[2]),
+                        echo(">>    3.      Address         : " + ((tempStr[2] == null) ? "" : tempStr[2]),
                                 true);
                         echo(">>", true);
                         echo(">>    4.      Back", true);
@@ -606,7 +612,7 @@ public class Main {
                         echo("                            Track Order                           ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    1.      Order ID    : " + ((tempStrings[0] == null) ? "" : tempStrings[0]), true);
+                        echo(">>    1.      Order ID    : " + ((tempStr[0] == null) ? "" : tempStr[0]), true);
                         echo(">>", true);
                         echo(">>    2.      Back", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -623,7 +629,26 @@ public class Main {
                         echo("                           Order Detail                           ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">> Order ID: " + theOrder.getOrderID(), false);
+                        echo(">> Order Date: " + theCust.getUserID(), false);
+                        echo(">> Order Total: " + theCust.getUserID(), false);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
+                        echo(">>    No      Item ID     Item Name   Item Price      Qty ", true);
+                        for (int i = 0; i < getFileSize(orderFileName); i++) {
+                            tempStr[9] = splitData(getAllLine(orderFileName)[i])[0]; // Set List No
+                            if (tempStr[9] == "ORDER") {
+                                tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Order Status
+                                tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Order Status Date
+                            }
+                            // 5:2:1:ProductE:11.20:3
+                            // No : Item ID : Item Name : Item Price : Qty
+                            tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Item ID
+                            tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Item Name
+                            tempStr[6] = splitData(getAllLine(orderFileName)[i])[3]; // Set Item Price
+                            tempStr[5] = splitData(getAllLine(orderFileName)[i])[4]; // Set Item Qty
+
+                        }
                         // No : Order ID : Item ID : Item Name : Item Price : Qty
                         // ORDER : Status : Status Date
                         // TODO Design ORDER DETAIL INTERFACE -------------------------------------
@@ -637,11 +662,11 @@ public class Main {
                         echo("                        Number 3 Bubble Tea                       ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        if (currentCustomer instanceof RegisteredCustomer) {
-                            echo(">> Current User: " + currentCustomer.getUserID(), false);
+                        if (theCust instanceof RegisteredCustomer) {
+                            echo(">> Current User: " + theCust.getUserID(), false);
                             // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
-                        } else if (currentCustomer instanceof Guest) {
-                            echo(">> Guest ID    : " + currentCustomer.getUserID(), false);
+                        } else if (theCust instanceof Guest) {
+                            echo(">> Guest ID    : " + theCust.getUserID(), false);
                         }
                         echo(">> Cart Ammount: ", false);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -681,10 +706,10 @@ public class Main {
                         echo("                        Number 3 Bubble Tea                       ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        if (currentCustomer instanceof RegisteredCustomer) {
-                            echo(">> Current User: " + currentCustomer.getUserID(), false);
-                        } else if (currentCustomer instanceof Guest) {
-                            echo(">> Guest ID    : " + currentCustomer.getUserID(), false);
+                        if (theCust instanceof RegisteredCustomer) {
+                            echo(">> Current User: " + theCust.getUserID(), false);
+                        } else if (theCust instanceof Guest) {
+                            echo(">> Guest ID    : " + theCust.getUserID(), false);
                         }
                         // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
                         echo(">> Cart Ammount: ", false);
@@ -989,6 +1014,10 @@ public class Main {
     // endregion INPUT
 
     // region OUTPUT
+    public static String todayDate() {
+        return dateFormat.format(date);
+    }
+
     public static void msgBox(String message, String title, int optionType) {
         // PLAIN_MESSAGE = -1
         // ERROR_MESSAGE = 0
@@ -1010,12 +1039,10 @@ public class Main {
     // region FILE HANDLING
 
     public static String getOrderFileName() {
-        if (currentCustomer instanceof Guest) {
-            return (String.format("Guest_%s_%s_%s", currentCustomer.getUserID(), dateFormat.format(date),
-                    currentOrder.getOrderID()));
-        } else if (currentCustomer instanceof RegisteredCustomer) {
-            return (String.format("User_%s_%s_%s", currentCustomer.getUserID(), dateFormat.format(date),
-                    currentOrder.getOrderID()));
+        if (theCust instanceof Guest) {
+            return (String.format("Guest_%s_%s_%s", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
+        } else if (theCust instanceof RegisteredCustomer) {
+            return (String.format("User_%s_%s_%s", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
         } else {
             return "ERROR";
         }
