@@ -23,6 +23,8 @@ public class Main {
     public static String orderFileName = "";
     public static int option;
     public static int itemCounter = 0;
+    public static double subAmount = 0;
+    public static double totalAmount = 0;
     public static String userInput;
     public static String[] tempStr = new String[10];
     public static boolean windowShopping = false;
@@ -57,7 +59,7 @@ public class Main {
         }
         // endregion DEBUG
 
-        LevelA: while (Start) {
+        Level1: while (Start) {
             itemCounter = 0; // Reset item count
 
             // region Level 1 - Login Menus
@@ -93,18 +95,18 @@ public class Main {
                 loopVal = true; // Reset Entry Key
             }
 
-            LevelB: while (loopVal) {
+            Level2: while (loopVal) {
                 switch (option = getOption(2, 0)) {
                     case 1: // Track Order
                         runB_TrackOrder();
-                        continue LevelB;
+                        continue Level2;
                     case 2: // Shop Now
                         loopVal = false; // Proceed to Shopping Item
                         break;
 
                     case 3: // USer Choose Sign Out
                         theCust.reset();
-                        continue LevelA; /// Back to top layer
+                        continue Level1; /// Back to top layer
                     default:
                         break;
                 }
@@ -121,13 +123,12 @@ public class Main {
                 fileCreate(orderFileName); // Create the order file for the customer
             }
             loopVal = true;
-
-            LevelC: while (loopVal) {
+            // Level 3
+             while (loopVal) {
                 switch (option = getOption(3, 0)) {
-
                     case 101: // View Cart
                         if (windowShopping) {
-                            continue LevelA;
+                            continue Level1;
                         } else {
                             displayInterface(3, 1);
                             continuePrompt();
@@ -135,10 +136,17 @@ public class Main {
                         break;
                     case 102: // Checkout
                         if (windowShopping) {
-                            continue LevelA;
+                            continue Level1;
                         } else {
-
-                            // TODO LEVEL C Algorithm for CHECK OUT
+                            if (itemCounter > 0) {
+                                tempStr[9] = String.format("ORDER:STATUS:Pending Payment:STATUS_DATE:%s",
+                                        theOrder.getOrderDate());
+                                setLine(tempStr[9], orderFileName);
+                                loopVal = false; // Set false to proceed next level loop
+                                // TODO Debug level 3 checkout
+                            } else {
+                                msgBox("Unable to checkout.\nCart is empty!", "Empty Cart Deteced", 0);
+                            }
                         }
                         break;
                     case 103: // User Choose back
@@ -147,13 +155,15 @@ public class Main {
                             break;
                         } else {
                             loopVal = false;
-                            continue LevelA;
+                            continue Level1;
                         }
-                    default:
-                        if (!windowShopping) {
-                            runC_SetProductQty();
+                    default: // User Choose Product ID
+                        if (!windowShopping) { // If it is not windows shopping
+                            runC_SetProductQty(); // Set ask user for quantity and set the qunatity
                             break;
                         }
+                        // Else if it is windows shopping then show error message that user cannot
+                        // select any product
                         msgBox("Unable to select a product.\nPlease login as a user or guest to select a product.",
                                 "Windows Shopping Only", 1);
                         break;
@@ -162,7 +172,19 @@ public class Main {
             // endregion Level 3 - Shopping
 
             // region level 4 - Payment
-
+            loopVal = true; // Reset Loop Val
+            while (loopVal) {
+                clearScreen();
+                echo("I am here ! Finally", true);
+                continuePrompt();
+                switch (option = getOption(4, 0)) {
+                    case 1:
+                        displayInterface(4, 0);
+                        break;
+                    default:
+                        break;
+                }
+            }
             // endregion Level 4 - Payment
         }
 
@@ -763,15 +785,15 @@ public class Main {
                         if (windowShopping) {
                             echo(">>   101.      Back", true);
                         } else {
-                            double total = 0;
                             for (int i = 0; i < getFileSize(orderFileName); i++) {
-                                total += Double.parseDouble(splitData(getAllLine(orderFileName)[i])[3]) * Double
+                                totalAmount += Double.parseDouble(splitData(getAllLine(orderFileName)[i])[3]) * Double
                                         .parseDouble(splitData(getAllLine(orderFileName)[i])[4]);
                             }
 
-                            echo(String.format(">>   101.      View Cart, Cart Ammount : RM %.2f", total), true);
+                            echo(String.format(">>   101.      View Cart, Cart Ammount : RM %.2f", totalAmount), true);
                             echo(">>   102.      Proceed to payment", true);
                             echo(">>   103.      Back", true);
+                            totalAmount = 0;
                         }
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
@@ -787,9 +809,8 @@ public class Main {
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
                         echo(">>\tNo\tItem ID\t\tItem Name\tItem Price(RM)\tQty\tAmount(RM)", true);
-                        double subAmount = 0, totalAmount = 0;
                         int statusCount = 0;
-                        // Count number of status
+                        // Count number of status Line
                         for (int i = 0; i < getFileSize(orderFileName); i++) {
                             if (splitData(getAllLine(orderFileName)[i])[0].equals("ORDER")) {
                                 statusCount += 1;
@@ -867,6 +888,7 @@ public class Main {
                         echo(String.format(">> Cart Total        : RM %.2f", totalAmount), true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo("", true);
+                        totalAmount = 0;
                         Arrays.fill(tempStr, null); // Reset Array
                         break;
                     case 2: // Checkout Page
@@ -886,6 +908,18 @@ public class Main {
                     default:
                         break;
                 }
+                break;
+            case 4:
+                switch (levelB) {
+                    case 0:
+                        // Payment Default Interface design
+                        // TODO LEVEL 4 Default Interface Design
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
@@ -999,7 +1033,7 @@ public class Main {
                 }
                 break;
             case 3:
-                // TODO LEVEL C ERROR MESSAGE
+                // TODO LEVEL 3 ERROR MESSAGE
                 switch (level2) {
                     case 3:
                         switch (level3) {
