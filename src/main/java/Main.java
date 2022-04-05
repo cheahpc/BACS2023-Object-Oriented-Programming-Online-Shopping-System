@@ -629,29 +629,40 @@ public class Main {
                         echo("                           Order Detail                           ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">> Order ID: " + theOrder.getOrderID(), false);
-                        echo(">> Order Date: " + theCust.getUserID(), false);
-                        echo(">> Order Total: " + theCust.getUserID(), false);
+                        echo(">> Order ID   : " + theOrder.getOrderID(), true);
+                        echo(">> Order Date : " + theOrder.getOrderDate(), true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
-                        echo(">>    No      Item ID     Item Name   Item Price      Qty ", true);
+                        echo(">>    No      Item ID     Item Name   Item Price      Qty     Amount(RM)", true);
+                        double subAmount = 0, totalAmount = 0;
                         for (int i = 0; i < getFileSize(orderFileName); i++) {
                             tempStr[9] = splitData(getAllLine(orderFileName)[i])[0]; // Set List No
                             if (tempStr[9] == "ORDER") {
                                 tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Order Status
                                 tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Order Status Date
+                                break;
                             }
-                            // 5:2:1:ProductE:11.20:3
-                            // No : Item ID : Item Name : Item Price : Qty
                             tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Item ID
                             tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Item Name
                             tempStr[6] = splitData(getAllLine(orderFileName)[i])[3]; // Set Item Price
                             tempStr[5] = splitData(getAllLine(orderFileName)[i])[4]; // Set Item Qty
-
+                            subAmount = Double.parseDouble(tempStr[6]) * Integer.parseInt(tempStr[5]);
+                            totalAmount += subAmount;
+                            // Display the items
+                            if (i < 10) {
+                                tempStr[4] = String.format(">>\t %s\t%s\t%s\t%s\t%s\tRM %d", tempStr[9], tempStr[8],
+                                        tempStr[7], tempStr[6], tempStr[5], subAmount);
+                            } else {
+                                tempStr[4] = String.format(">>\t%s\t%s\t%s\t%s\t%s\tRM %d", tempStr[9], tempStr[8],
+                                        tempStr[7], tempStr[6], tempStr[5], subAmount);
+                            }
                         }
-                        // No : Order ID : Item ID : Item Name : Item Price : Qty
-                        // ORDER : Status : Status Date
                         // TODO Design ORDER DETAIL INTERFACE -------------------------------------
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo(">> Order Total : RM" + totalAmount, false);
+                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+                        echo("", true);
+                        Arrays.fill(tempStr, null); // Reset Array
                         break;
                 }
                 break;
@@ -668,7 +679,7 @@ public class Main {
                         } else if (theCust instanceof Guest) {
                             echo(">> Guest ID    : " + theCust.getUserID(), false);
                         }
-                        echo(">> Cart Ammount: ", false);
+                        echo(">> Cart Ammount : ", false);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>    No        Product                 Price", true);
                         for (int i = 0; i < getFileSize(ITEM_FILE); i++) {
@@ -1040,9 +1051,9 @@ public class Main {
 
     public static String getOrderFileName() {
         if (theCust instanceof Guest) {
-            return (String.format("Guest_%s_%s_%s", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
+            return (String.format("Guest_%s_%s_%s.txt", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
         } else if (theCust instanceof RegisteredCustomer) {
-            return (String.format("User_%s_%s_%s", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
+            return (String.format("User_%s_%s_%s.txt", theCust.getUserID(), todayDate(), theOrder.getOrderID()));
         } else {
             return "ERROR";
         }
