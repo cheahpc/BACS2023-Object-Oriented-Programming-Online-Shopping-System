@@ -123,15 +123,15 @@ public class Main {
             LevelC: while (loopVal) {
                 switch (option = getOption(3, 0)) {
 
-                    case 101: // Check Order
+                    case 101: // View Cart
                         if (windowShopping) {
                             continue LevelA;
                         } else {
-                            // TODO Level C Algorithm for check order
+                            // TODO Level C Algorithm for VIEW CART
                         }
                         break;
-                    case 102: // USer Choose Track Order
-                        // TODO Algorithm for Track Order
+                    case 102: // Checkout
+                        // TODO LEVEL C Algorithm for CHECK OUT
 
                         break;
                     case 103: // User Choose back
@@ -402,11 +402,11 @@ public class Main {
                     theOrder.getOrderID());
         }
 
-        // Open file and read the file
-        // TODO Level B Show Order Details-----------------------------------------
         displayInterface(2, 12);
+        Arrays.fill(tempStr, null); // Reset Array
+        theOrder.reset();
         contin1uePrompt(); // Pause for the user to check order details
-        tempStr[0] = null; // Reset Order ID for temp string
+
         return;
     }
 
@@ -633,33 +633,51 @@ public class Main {
                         echo(">> Order Date : " + theOrder.getOrderDate(), true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
-                        echo(">>    No      Item ID     Item Name   Item Price      Qty     Amount(RM)", true);
+                        echo(">>\tNo\tItem ID\t\tItem Name\tItem Price\tQty\tAmount(RM)", true);
                         double subAmount = 0, totalAmount = 0;
+                        int statusCount = 0;
+                        // Count number of status
                         for (int i = 0; i < getFileSize(orderFileName); i++) {
-                            tempStr[9] = splitData(getAllLine(orderFileName)[i])[0]; // Set List No
-                            if (tempStr[9] == "ORDER") {
-                                tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Order Status
-                                tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Order Status Date
-                                break;
+                            if (splitData(getAllLine(orderFileName)[i])[0].equals("ORDER")) {
+                                statusCount += 1;
                             }
+                        }
+                        // Display order list
+                        for (int i = 0; i < getFileSize(orderFileName) - statusCount; i++) {
+                            tempStr[9] = splitData(getAllLine(orderFileName)[i])[0]; // Set List No
                             tempStr[8] = splitData(getAllLine(orderFileName)[i])[1]; // Set Item ID
                             tempStr[7] = splitData(getAllLine(orderFileName)[i])[2]; // Set Item Name
                             tempStr[6] = splitData(getAllLine(orderFileName)[i])[3]; // Set Item Price
                             tempStr[5] = splitData(getAllLine(orderFileName)[i])[4]; // Set Item Qty
+                            // Calculate total and subtotal
                             subAmount = Double.parseDouble(tempStr[6]) * Integer.parseInt(tempStr[5]);
                             totalAmount += subAmount;
-                            // Display the items
+                            // Set the display format
                             if (i < 10) {
-                                tempStr[4] = String.format(">>\t %s\t%s\t%s\t%s\t%s\tRM %d", tempStr[9], tempStr[8],
+                                tempStr[4] = String.format(">>\t %s\t      %s\t\t%s\t%s\t\t%s\tRM %.2f", tempStr[9],
+                                        tempStr[8],
                                         tempStr[7], tempStr[6], tempStr[5], subAmount);
                             } else {
-                                tempStr[4] = String.format(">>\t%s\t%s\t%s\t%s\t%s\tRM %d", tempStr[9], tempStr[8],
+                                tempStr[4] = String.format(">>\t%s\t      %s\t\t%s\t%s\t\t%s\tRM %.2f", tempStr[9],
+                                        tempStr[8],
                                         tempStr[7], tempStr[6], tempStr[5], subAmount);
                             }
+                            // Display the list
+                            echo(tempStr[4], true);
                         }
-                        // TODO Design ORDER DETAIL INTERFACE -------------------------------------
+                        // Set latest order status
+                        tempStr[9] = String.valueOf(splitData(getAllLine(orderFileName)[getFileSize(
+                                orderFileName) - 1])[2]); // Set Order
+                                                          // Status
+                        tempStr[8] = String.valueOf(splitData(getAllLine(orderFileName)[getFileSize(
+                                orderFileName) - 1])[4]); // Set Order
+                                                          // Status Date
+                        // Display order total and order status
+                        echo(">>", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">> Order Total : RM" + totalAmount, false);
+                        echo(">> Order Total        : RM " + totalAmount, true);
+                        echo(">> Order Status       : " + tempStr[9], true);
+                        echo(">> Order Status Date  : " + tempStr[8], true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo("", true);
                         Arrays.fill(tempStr, null); // Reset Array
@@ -675,7 +693,6 @@ public class Main {
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         if (theCust instanceof RegisteredCustomer) {
                             echo(">> Current User: " + theCust.getUserID(), false);
-                            // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
                         } else if (theCust instanceof Guest) {
                             echo(">> Guest ID    : " + theCust.getUserID(), false);
                         }

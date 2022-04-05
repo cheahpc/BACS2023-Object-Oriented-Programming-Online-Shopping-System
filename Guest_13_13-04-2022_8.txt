@@ -3,4 +3,6 @@
 3:3:ProductC:3.70:4
 4:2:ProductD:9.80:3
 5:1:ProductE:11.20:3
-ORDER : Status : Status Date
+ORDER:Status:first:StatusDate:initial_date
+ORDER:Status:second:StatusDate:status_date
+ORDER:Status:last:StatusDate:finaldate
