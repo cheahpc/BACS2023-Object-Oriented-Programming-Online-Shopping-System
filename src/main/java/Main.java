@@ -27,10 +27,11 @@ public class Main {
     public static String[] tempStr = new String[10];
     public static boolean windowShopping = false;
     public static boolean loopVal = true;
+    public static boolean toLevel2 = false;
     public static Scanner sc = new Scanner(System.in);
     static Customer theCust;
     static Order theOrder;
-    static Product product;
+    static Product theProduct;
     static Payment payment;
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     static Date date = new Date();
@@ -57,6 +58,7 @@ public class Main {
         // endregion DEBUG
 
         LevelA: while (Start) {
+            itemCounter = 0; // Reset item count
 
             // region Level 1 - Login Menus
             while (loopVal) {
@@ -127,19 +129,23 @@ public class Main {
                         if (windowShopping) {
                             continue LevelA;
                         } else {
-                            // TODO Level C Algorithm for VIEW CART
+                            runC_ViewCart();
                         }
                         break;
                     case 102: // Checkout
-                        // TODO LEVEL C Algorithm for CHECK OUT
-
+                        if (windowShopping) {
+                            continue LevelA;
+                        } else {
+                            // TODO LEVEL C Algorithm for CHECK OUT
+                        }
                         break;
                     case 103: // User Choose back
                         if (windowShopping) {
-                            msgBox("Invalid option", "Input Denied", 0);
+                            msgBox("Invalid option.", "Input Denied", 0);
                             break;
                         } else {
-                            continue LevelC;
+                            loopVal = false;
+                            continue LevelA;
                         }
                     default:
                         if (!windowShopping) {
@@ -372,7 +378,7 @@ public class Main {
             switch (getOption(2, 1)) {
                 case 1: // User Choose 1 - Set Order ID
                     tempStr[0] = getInput(2, 1, 1); // Get Order ID
-                    if (getLine(tempStr[0], 0, ORDER_FILE) == "") {
+                    if (getLine(tempStr[0], 0, ORDER_FILE).equals("")) {
                         // When Order ID Not found
                         tempStr[0] = null;
                         msgBox("Order ID does not exist.", "Invalid Order ID", 0);
@@ -414,30 +420,37 @@ public class Main {
 
     // region MENU FUNCTION C
     public static void runC_SetProductQty() {
-        do {
-
+        int quantity;
+        SetQty: do {
             if (getLine(String.valueOf(option), 0, ITEM_FILE) == "") {
                 // If user enter product id that does not exist
                 msgBox("Item Not available", "Invalid Item Choice", 0); // Error message
+                return;
             } else {
-                // TODO LEVEL C check getInput
-                int quantity = Integer.parseInt(getInput(3, 3, 0)); // Prompt user for quantity input
+                // Set product properties
+                theProduct = new Product(splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[0],
+                        splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[1],
+                        Double.parseDouble(splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[2]));
+                quantity = Integer.parseInt(getInput(3, 3, 0)); // Prompt user for quantity input
                 if (quantity == 0) { // If user enter 0 quantity
+                    // Show error message and repeat the prompt for quantity
                     msgBox("Quantity cannot be 0", "Invalid Quantity", 0);
+                    continue SetQty;
                 } else {
-
+                    itemCounter++;
+                    // TODO write quantity and item details to the file
+                    // Set the order list format
+                    tempStr[9] = String.format("%d:%s:%s:%s:%d", itemCounter, theProduct.getProductID(),
+                            theProduct.getproductName(), theProduct.getproductPrice(), quantity);
+                    // Write the item to the user's order file
+                    setLine(tempStr[9], orderFileName);
+                    return;
                 }
             }
-
-            // No : Order ID : Item ID : Item Name : Item Price : Qty
-            tempStr[9] = getLine(String.valueOf(option), 0, ITEM_FILE); // Get detail of item from file
-            product = new Product(splitData(tempStr[9])[1], splitData(tempStr[9])[2],
-                    Double.parseDouble(splitData(tempStr[9])[3])); // Set product product object
-
-            tempStr[4] = todayDate(); // Set today date
-            itemCounter += 1;
-            setLine(tempStr[8], orderFileName);
         } while (true);
+    }
+
+    public static void runC_ViewCart() {
 
     }
     // endregion MENU FUNCTION C
@@ -618,13 +631,13 @@ public class Main {
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
                         break;
-                    case 10:
+                    case 10: // Order Track Page
                         echo(">> Choose an option: ", false);
                         break;
-                    case 11:
+                    case 11: // Order Track Page - Set Order ID
                         echo(">> Please enter 1. ORDER ID: ", false);
                         break;
-                    case 12:
+                    case 12: // Order Track Page - Show Order Details
                         echo("------------------------------------------------------------------", true);
                         echo("                           Order Detail                           ", true);
                         echo("------------------------------------------------------------------", true);
@@ -687,16 +700,10 @@ public class Main {
             case 3: // Shop Item Module
                 switch (levelB) {
                     case 0:
+
                         echo("------------------------------------------------------------------", true);
                         echo("                        Number 3 Bubble Tea                       ", true);
                         echo("------------------------------------------------------------------", true);
-                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        if (theCust instanceof RegisteredCustomer) {
-                            echo(">> Current User: " + theCust.getUserID(), false);
-                        } else if (theCust instanceof Guest) {
-                            echo(">> Guest ID    : " + theCust.getUserID(), false);
-                        }
-                        echo(">> Cart Ammount : ", false);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>    No        Product                 Price", true);
                         for (int i = 0; i < getFileSize(ITEM_FILE); i++) {
@@ -712,10 +719,17 @@ public class Main {
                                     true);
                         }
                         echo(">>", true);
+
                         if (windowShopping) {
                             echo(">>   101.      Back", true);
                         } else {
-                            echo(">>   101.      View Cart", true);
+                            double total = 0;
+                            for (int i = 0; i < getFileSize(orderFileName); i++) {
+                                total += Double.parseDouble(splitData(getAllLine(orderFileName)[i])[3]) * Double
+                                        .parseDouble(splitData(getAllLine(orderFileName)[i])[4]);
+                            }
+
+                            echo(String.format(">>   101.      View Cart, Cart Ammount : RM %.2f", total), true);
                             echo(">>   102.      Proceed to payment", true);
                             echo(">>   103.      Back", true);
                         }
@@ -731,39 +745,10 @@ public class Main {
                         break;
                     case 30: // Ask user for quantity
                         echo("------------------------------------------------------------------", true);
-                        echo("                        Number 3 Bubble Tea                       ", true);
+                        echo("                             How Many?                            ", true);
                         echo("------------------------------------------------------------------", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        if (theCust instanceof RegisteredCustomer) {
-                            echo(">> Current User: " + theCust.getUserID(), false);
-                        } else if (theCust instanceof Guest) {
-                            echo(">> Guest ID    : " + theCust.getUserID(), false);
-                        }
-                        // TODO How to calculate the amount ?!!!!!!!!!!!!!!!!!!!
-                        echo(">> Cart Ammount: ", false);
-                        echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">>    No        Product                 Price", true);
-                        for (int i = 0; i < getFileSize(ITEM_FILE); i++) {
-                            if (i < 9) {
-                                echo(">>     ", false);
-                            } else {
-                                echo(">>    ", false);
-                            }
-                            echo(splitData(getAllLine(ITEM_FILE)[i])[0] + "\t" + splitData(
-                                    getAllLine(ITEM_FILE)[i])[1] + "\t\t"
-                                    + splitData(
-                                            getAllLine(ITEM_FILE)[i])[2],
-                                    true);
-                        }
-                        echo(">>", true);
-                        if (windowShopping) {
-
-                        } else {
-                            echo(">>   101.      View Cart", true);
-                            echo(">>   102.      Proceed to payment", true);
-                            echo(">>   103.      Back", true);
-                        }
-
+                        echo(theProduct.toString(), true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
                         echo(">>", true);
                         echo(">> Enter a quantity: ", false);
@@ -1024,17 +1009,16 @@ public class Main {
                 break;
             case 3:
                 switch (inputID) {
-                    case 1:
+                    case 0: // Shopping
                         regExPat = Pattern.compile("[0-9]{1,3}");
                         break;
-
                     default:
-                        break;
+                        return true; // Default return value when no ID detected
                 }
+                break;
             default:
                 return true; // Default return value when no ID detected
         }
-
         matchVar = regExPat.matcher(userInput);
         // Return true or false if matched or not matched
         return matchVar.matches();

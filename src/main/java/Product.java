@@ -45,7 +45,7 @@ public class Product {
     // endregion STANDARD
     // Method
     public String toString() {
-        return String.format("Product ID: %s\nProduct Name: %s\nProduct Price: RM %f", productID, productName,
+        return String.format("Product ID: %s\nProduct Name: %s\nProduct Price: RM %.2f", productID, productName,
                 productPrice);
     }
 }
