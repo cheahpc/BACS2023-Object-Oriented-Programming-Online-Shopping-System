@@ -8,16 +8,3 @@
 8:TeaName8:10.08
 9:TeaName9:1.04
 10:TeaName10:9.06
-11:TeaName11:18.17
-12:TeaName12:2.53
-13:TeaName13:2.76
-14:TeaName14:18.27
-15:TeaName15:11.20
-16:TeaName16:13.73
-17:TeaName17:15.18
-18:TeaName18:6.79
-19:TeaName19:13.31
-20:TeaName20:12.18
-21:TeaName21:12.18
-22:TeaName22:12.18
-23:TeaName23:12.18

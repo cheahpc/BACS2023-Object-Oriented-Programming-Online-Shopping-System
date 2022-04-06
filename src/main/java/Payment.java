@@ -79,11 +79,11 @@ public class Payment {
     }
 
     public String toString() {
-        return String.format(">> Discount Rate       : %.2f                                     \n" +
-                ">> Services Charges    : RM %.2f                                  \n" +
-                ">> Total Fees          : RM %.2f                                  \n" +
-                ">> Status              : %s                                       \n" +
-                ">> Transaction type    : %s                                       \n", discountRate, serviceCharges,
+        return String.format(">> (-) Discount Rate (%s)      : %.2f     \n" +
+                             ">> (+) Services Charges       : RM %.2f  \n" +
+                             ">> Total Fees                 : RM %.2f  \n" +
+                             ">> Status                     : %s       \n" +
+                             ">> Transaction type           : %s       \n","%", discountRate, serviceCharges,
                 totalFees, status, transactionType);
     }
 }

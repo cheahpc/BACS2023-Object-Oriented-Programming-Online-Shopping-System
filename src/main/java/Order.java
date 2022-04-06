@@ -78,7 +78,7 @@ public class Order {
     public String toString() {
         return String.format(
                 "Order ID: %s\nOrder Date: %s\nTotal Amount: %.2f\nOrder Status: %s\n\n-Customer Details- \n%s\n-Payment Details-\n%s\n",
-                orderID, orderDate, totalAmount, orderStatus, customerDetails, payment);
+                orderID, orderDate, totalAmount, orderStatus, customerDetails, payment.toString());
     }
 
     public void reset() {

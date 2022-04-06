@@ -11,6 +11,7 @@ import java.util.Scanner; // Import the Scanner class to read text files
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.*;
+
 import java.util.regex.*;
 
 public class Main {
@@ -34,7 +35,10 @@ public class Main {
     static Customer theCust;
     static Order theOrder;
     static Product theProduct;
-    static Payment payment;
+    static Payment pay = new Payment();
+    static E_Wallet wallet = new E_Wallet();
+    static Bank bank = new Bank();
+    // static Payment thePayment;
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     static Date date = new Date();
 
@@ -61,8 +65,12 @@ public class Main {
 
         Level1: while (Start) {
             itemCounter = 0; // Reset item count
+            if (toLevel2) {
+                loopVal = false;
+                toLevel2 = false;
+            }
 
-            // region Level 1 - Login Menus
+            // region Level 1 - Login Menu
             while (loopVal) {
                 switch (option = getOption(1, 0)) { // Login Interface
                     case 1: // User Login
@@ -115,9 +123,9 @@ public class Main {
 
             // region Level 3 - Shopping
             if (!windowShopping) {
-                theOrder = new Order(String.valueOf(getFileSize(ORDER_FILE)), theCust, payment, todayDate(), 0,
+                theOrder = new Order(String.valueOf(getFileSize(ORDER_FILE)), theCust, pay, todayDate(), 0,
                         "Pending Payment"); // Starting Order details Set Oder Object
-                echo(theOrder.toString(), true); // Debug?
+                // echo(theOrder.toString(), true); // Debug?
                 orderFileName = getOrderFileName(); // Set order file name for the customer
                 fileCreate(orderFileName); // Create the order file for the customer
             }
@@ -176,10 +184,6 @@ public class Main {
             boolean validation;
 
             // object
-            Payment pay = new Payment();
-            E_Wallet wallet = new E_Wallet();
-            Bank bank = new Bank();
-
             Level4: while (true) {
                 clearScreen();
                 paymentDisplayInterface(0); // display main transaction interface
@@ -247,7 +251,7 @@ public class Main {
                         }
 
                         while (true) {
-                            
+
                             System.out.println(
                                     "------------------------------------------------------------------\n");
                             clearScreen();
@@ -264,7 +268,8 @@ public class Main {
                                     ">> Please enter 6-digit TAC to verify your identity:              ");
                             System.out.println(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                            System.out.println(">> TAR code (6-digit) : " + pay.getTACcode());
+                            int tempCode = pay.getTACcode();
+                            System.out.println(">> TAR code (6-digit) : " + tempCode);
                             System.out.print(">> Enter the TAC code : ");
                             validation = inputPatternCheck(4, 6);
                             if (!validation) {
@@ -274,7 +279,7 @@ public class Main {
                                 tempInt = Integer.parseInt(userInput); // string to integer
                             }
 
-                            if (pay.getTACcode() == tempInt) {
+                            if (tempInt == tempCode) {
                                 wallet.setStatus("Successful");
                                 System.out.println(">> Status : " + wallet.getStatus());
                                 pauseScreen();
@@ -288,24 +293,23 @@ public class Main {
                         }
 
                         clearScreen();
-                        displayTotal(totalAmount, wallet.getDiscountRate(), wallet.getServiceCharges(),
-                                wallet.calTotalFees(totalAmount));
+                        displayTotal(theOrder.getTotalAmount(), wallet.getDiscountRate(), wallet.getServiceCharges(),
+                                wallet.calTotalFees(theOrder.getTotalAmount()));
                         continuePrompt();
                         clearScreen();
                         paymentDisplayInterface(3); // QRcode
                         System.out.printf(
                                 ">> Total Fees                                         RM %.2f     \n",
-                                wallet.calTotalFees(totalAmount));
+                                wallet.calTotalFees(theOrder.getTotalAmount()));
                         System.out.println(
                                 ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                         System.out.println(
                                 "------------------------------------------------------------------");
                         continuePrompt();
-
                         clearScreen();
-                        receipt(theOrder.getOrderID(), theCust.getFullName(), date, totalAmount);
+                        receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
                         System.out.printf(wallet.toString());
-
+                        updateOrderData(wallet);
                         continuePrompt();
                         tempInt = 0; // clear data
                         option = 0; // unset data
@@ -388,12 +392,26 @@ public class Main {
                             break;
                         }
                         clearScreen();
-                        displayTotal(totalAmount, bank.getDiscountRate(), bank.getServiceCharges(),
-                                bank.calTotalFees(totalAmount));
+                        displayTotal(theOrder.getTotalAmount(), bank.getDiscountRate(), bank.getServiceCharges(),
+                                bank.calTotalFees(theOrder.getTotalAmount()));
                         continuePrompt();
+
                         clearScreen();
                         while (true) {
-                            System.out.println(">> TAC code (6-digit) : " + pay.getTACcode());
+                            System.out.println(
+                                    "------------------------------------------------------------------");
+                            System.out.println(
+                                    "                           Verification                           ");
+                            System.out.println(
+                                    "------------------------------------------------------------------");
+                            System.out.println(
+                                    ">> For security reasons,                                          ");
+                            System.out.println(
+                                    ">> Please enter 6-digit TAC to verify your identity:              ");
+                            System.out.println(
+                                    ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                            int tempCode = pay.getTACcode();
+                            System.out.println(">> TAR code (6-digit) : " + tempCode);
                             System.out.print(">> Enter the TAC code : ");
                             validation = inputPatternCheck(4, 6);
                             if (!validation) {
@@ -403,28 +421,28 @@ public class Main {
                                 tempInt = Integer.parseInt(userInput); // string to integer
                             }
 
-                            if (pay.getTACcode() == tempInt) {
+                            if (tempInt == tempCode) {
                                 bank.setStatus("Successful");
                                 System.out.println(">> Status : " + bank.getStatus());
                                 pauseScreen();
+                                break;
                             } else {
                                 bank.setStatus("Unsuccessful");
                                 System.out.println(">> Status : " + bank.getStatus());
                                 pauseScreen();
                                 continue;
                             }
-                            break;
                         }
                         continuePrompt();
-
                         clearScreen();
-                        receipt(theOrder.getOrderID(), theCust.getFullName(), date, totalAmount);
-                        System.out.printf(bank.toString());
-
+                        receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
+                        System.out.println(bank.toString());
+                        updateOrderData(bank);
+                        continuePrompt();
                         tempInt = 0; // clear data
                         option = 0; // uset data
                         userInput = ""; // unset data
-                        continue Level4;
+                        continue Level1;
 
                     default:
                         System.out.println(">> ERROR! Unable to process input.");
@@ -685,7 +703,7 @@ public class Main {
             echo(tempStr[4], true);
         }
 
-        theOrder = new Order(tempStr[0], theCust, payment,
+        theOrder = new Order(tempStr[0], theCust, pay,
                 splitData(getLine(tempStr[0], 0, ORDER_FILE))[1], totalAmount,
                 splitData(getLine(tempStr[0], 0, ORDER_FILE))[2]);
 
@@ -721,7 +739,18 @@ public class Main {
                 theProduct = new Product(splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[0],
                         splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[1],
                         Double.parseDouble(splitData(getLine(String.valueOf(option), 0, ITEM_FILE))[2]));
-                quantity = Integer.parseInt(getInput(3, 3, 0)); // Prompt user for quantity input
+                tempStr[0] = "";
+                // Get the user to input qty
+                while (true) {
+                    tempStr[0] = getInput(3, 3, 0);
+                    if (tempStr[0].equals("")) {
+                        msgBox("Please enter a value", "Invalid Input", 0);
+                    } else {
+                        break;
+                    }
+
+                }
+                quantity = Integer.parseInt(tempStr[0]); // Prompt user for quantity input
                 if (quantity == 0) { // If user enter 0 quantity
                     // Show error message and repeat the prompt for quantity
                     msgBox("Quantity cannot be 0", "Invalid Quantity", 0);
@@ -746,6 +775,7 @@ public class Main {
     // region MENU FUNCTION D
     // determine object class
     public static void determine(Payment object) {
+
         if (object instanceof E_Wallet) {
             object.setTransactionType("E-Wallet"); // assign "E-Wallet" to transaction type
             object.setServiceCharges(0.50);
@@ -763,6 +793,18 @@ public class Main {
         }
     }
 
+    public static void updateOrderData(Payment obj) {
+        // Update order txt with new successful order details
+        setLine(String.format("%s:%s:%s:PAID:%s:%.2f", theOrder.getOrderID(), theOrder.getOrderDate(),
+                theCust.getUserID(), obj.getTransactionType(), obj.getTotalFees()), ORDER_FILE);
+        // Update user order file with latest payment status
+        setLine(String.format("ORDER:STATUS,Paid:STATUS_DATE:%s",
+                theOrder.getOrderDate()), orderFileName);
+        orderFileName = null; // Reset the order file name to close the order file
+        theOrder.reset(); // Reset the order fields
+        toLevel2 = true;
+    }
+
     // pause the screen
     public static void pauseScreen() {
         try {
@@ -778,10 +820,10 @@ public class Main {
         System.out.printf("                          Total Fees                              \n");
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.printf(">> Total Amount        : RM %.2f                                  \n", totalAmount);
-        System.out.printf(">> Discount Rate       : %.2f                                     \n", discountRate);
-        System.out.printf(">> Services Charges    : RM %.2f                                  \n", serviceCharges);
-        System.out.printf(">> Total Fees          : RM %.2f                                  \n", totalFees);
+        System.out.printf(">> Total Amount            : RM %.2f                              \n", totalAmount);
+        System.out.printf(">> (-) Discount Rate (%s)   : %.2f                                 \n", "%", discountRate);
+        System.out.printf(">> (+) Services Charges    : RM %.2f                              \n", serviceCharges);
+        System.out.printf(">> Total Fees              : RM %.2f                              \n", totalFees);
         System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         System.out.printf("------------------------------------------------------------------\n");
     }
@@ -1595,8 +1637,7 @@ public class Main {
                         regExPat = Pattern.compile("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}");
                         break;
                     case 4: // Bank Expire Date
-                        regExPat = Pattern.compile(
-                                "([0]{1}[1-9]{1}|[1]{1}[0-9]{1})\"/([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-1])");
+                        regExPat = Pattern.compile("[01]{1}[0-9]{1}/[0-3]{1}[0-9]{1}");
                         break;
                     case 5: // Bank CV Code
                         regExPat = Pattern.compile("[0-9]{3}");

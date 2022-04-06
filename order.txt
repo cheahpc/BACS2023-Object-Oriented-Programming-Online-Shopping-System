@@ -1,10 +1,3 @@
-OrderID : Order Date : Customer ID : OrderStatus : Payment
-1:22-07-2022:13:s a:payment?
-2:13-04-2022:13:s 2:payment?
-3:13-04-2022:13:s er:payment?
-4:13-04-2022:13:s haha:payment?
-5:13-04-2022:13:s dk:payment?
-6:13-04-2022:13:s someting:payment?
-7:13-04-2022:13:s har:payment?
-8:13-04-2022:13:s jeje:payment?
-9:13-04-2022:13:s keke:payment?
+OrderID : Order Date : Customer ID : OrderStatus : Payment Method : Paid Amount
+1:07-04-2022:3:PAID:E-Wallet:45.23
+2:07-04-2022:1:PAID:Bank:32.33
