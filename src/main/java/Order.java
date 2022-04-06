@@ -4,6 +4,7 @@ public class Order {
     private Customer customerDetails;
     private Payment payment;
     private String orderDate;
+    private double totalAmount;
     private String orderStatus;
 
     // region STANDARD
@@ -11,11 +12,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderID, Customer customerDetails, Payment payment, String orderDate, String orderStatus) {
+    public Order(String orderID, Customer customerDetails, Payment payment, String orderDate, double totalAmount,
+            String orderStatus) {
         this.orderID = orderID;
         this.customerDetails = customerDetails;
         this.payment = payment;
         this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
         this.orderStatus = orderStatus;
     }
 
@@ -34,6 +37,10 @@ public class Order {
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public void setTotalAmounnt(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public void setOrderStatus(String orderStatus) {
@@ -57,6 +64,10 @@ public class Order {
         return orderDate;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
     public String getOrderStatus() {
         return orderStatus;
     }
@@ -66,13 +77,14 @@ public class Order {
     // Method
     public String toString() {
         return String.format(
-                "Order ID: %s\nOrder Date: %s\nOrder Status: %s\n\n-Customer Details- \n%s\n-Payment Details-\n%s\n",
-                orderID, orderDate, orderStatus, customerDetails, payment);
+                "Order ID: %s\nOrder Date: %s\nTotal Amount: %.2f\nOrder Status: %s\n\n-Customer Details- \n%s\n-Payment Details-\n%s\n",
+                orderID, orderDate, totalAmount, orderStatus, customerDetails, payment);
     }
 
     public void reset() {
         orderID = null;
         orderDate = null;
+        totalAmount = 0;
         orderStatus = null;
         customerDetails = null;
         payment = null;

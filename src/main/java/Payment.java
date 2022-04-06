@@ -1,15 +1,14 @@
 
-import java.util.Date;
+import java.util.Random;
 
 public class Payment {
 
+
     // data properties
-    int max = 999999, min = 100000;
-    protected int referenceNo = (int) (Math.random() * (max - min + 1) + min);
-    protected int codeTAC = (int) (Math.random() * (max - min + 1) + min);
-    protected double totalFees = 1000.00, discountFees;
-    protected Date dateCreated;
-    protected String status, transactionType;
+    protected int TACcode;
+    private double totalFees, discountRate;
+    protected double serviceCharges;
+    private String status, transactionType;
 
     // no arg constructor
     public Payment() {
@@ -17,12 +16,13 @@ public class Payment {
     }
 
     // arg constructor
-    public Payment(double totalFees, double discountFees, String status, String transactionType) {
+    public Payment(double totalFees, double discountRate, String status, String transactionType,
+            double serviceCharges) {
         this.totalFees = totalFees;
-        this.discountFees = discountFees;
+        this.discountRate = discountRate;
         this.status = status;
         this.transactionType = transactionType;
-        dateCreated = new java.util.Date();// system generated user can't modify
+        this.serviceCharges = serviceCharges;
     }
 
     // setter
@@ -38,8 +38,12 @@ public class Payment {
         this.status = status;
     }
 
-    public void setDiscountFees(double discountFees) {
-        this.discountFees = discountFees;
+    public void setDiscountRate(double discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public void setServiceCharges(double serviceCharges) {
+        this.serviceCharges = serviceCharges;
     }
 
     // getter
@@ -47,16 +51,13 @@ public class Payment {
         return totalFees;
     }
 
-    public double getDiscountFees() {
-        return discountFees;
+    public double getDiscountRate() {
+        return discountRate;
     }
 
-    public int getCodeTAC() {
-        return codeTAC;
-    }
-
-    public int getReferenceNo() {
-        return referenceNo;
+    public int getTACcode() {   
+        Random randNum = new Random();
+        return TACcode = (int) (randNum.nextInt(999999) + 100000);
     }
 
     public String getTransactionType() {
@@ -67,43 +68,22 @@ public class Payment {
         return status;
     }
 
+    public double getServiceCharges() {
+        return serviceCharges;
+    }
+
     // method
-    public String output() {
-        return String.format("------------------------------------------------------------------\n" +
-                "                 Transaction of Ordering System                   \n" +
-                "------------------------------------------------------------------\n" +
-                ">> Payment Option/Method :                                        \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                ">>    1.      E-Wallet                                            \n" +
-                ">>    2.      Bank                                                \n" +
-                ">>                                                                \n" +
-                ">>    0.      Exit                                                \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    public double calTotalFees(double totalAmount) {
+        totalFees = totalAmount - (totalAmount * discountRate);
+        return totalFees;
     }
 
-    public boolean verification(int noTAC) {
-        if (codeTAC == noTAC) {
-            status = "Successful";
-            return true;
-        } else {
-            status = "Unsuccessful";
-            return false;
-        }
-    }
-
-    public double calTotalFees() {
-        return (totalFees - discountFees);
-    }
-
-    public String receipt() {
-        return String.format("------------------------------------------------------------------\n" +
-                "                        Transaction Receipt                       \n" +
-                "------------------------------------------------------------------\n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                ">> Transaction type    : %s                                       \n" +
-                ">> Reference Number    : %d                                       \n" +
+    public String toString() {
+        return String.format(">> Discount Rate       : %.2f                                     \n" +
+                ">> Services Charges    : RM %.2f                                  \n" +
+                ">> Total Fees          : RM %.2f                                  \n" +
                 ">> Status              : %s                                       \n" +
-                ">> Date Created        : %s                                       \n", transactionType, referenceNo,
-                status, dateCreated);
+                ">> Transaction type    : %s                                       \n", discountRate, serviceCharges,
+                totalFees, status, transactionType);
     }
 }

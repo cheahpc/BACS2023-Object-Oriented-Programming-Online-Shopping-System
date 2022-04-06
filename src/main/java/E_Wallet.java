@@ -3,7 +3,7 @@ public class E_Wallet extends Payment {
 
     // data properties
     private String walletName;
-    private static double servicesCharges = 0.30;
+    private String walletID;
 
     // no arg contsructor
     public E_Wallet() {
@@ -11,9 +11,11 @@ public class E_Wallet extends Payment {
     }
 
     // arg constructor
-    public E_Wallet(double totalFees, double discountFees, int codeTAC, String status, String transactionType,String walletName) {
-        super(totalFees, discountFees, status, transactionType); // superclass portion
+    public E_Wallet(double totalFees, double discountRate, String status, String transactionType, double serviceCharges,
+            String walletName, String walletID) {
+        super(totalFees, discountRate, status, transactionType, serviceCharges); // superclass portion
         this.walletName = walletName;
+        this.walletID = walletID;
     }
 
     // setter
@@ -21,100 +23,56 @@ public class E_Wallet extends Payment {
         this.walletName = walletName;
     }
 
+    public void setWalletID(String walletID) {
+        this.walletID = walletID;
+    }
+
     // getter
     public String getWalletName() {
         return walletName;
     }
 
-    // method
-    public String output() {
-        return String.format("------------------------------------------------------------------\n" +
-                "                       E-Wallet Transaction                       \n" +
-                "------------------------------------------------------------------\n" +
-                ">> Select Your E-Wallet Name To Make The Payment:                 \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                ">>    1.      Touch 'N Go                                         \n" +
-                ">>    2.      GrabPay                                             \n" +
-                ">>    3.      Boost                                               \n" +
-                ">>    4.      WeChat Pay                                          \n" +
-                ">>    5.      iPay88                                              \n" +
-                ">>    6.      vcash                                               \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    public String getWalletID() {
+        return walletID;
     }
 
-    public boolean determineWallet(int option) {
+    // method
+
+    public void determineWallet(int option) {
         switch (option) {
             case 1:
                 setWalletName("Touch 'N Go");
-                return true;
+                break;
 
             case 2:
                 setWalletName("GrabPay");
-                return true;
+                break;
 
             case 3:
                 setWalletName("Boost");
-                return true;
+                break;
 
             case 4:
                 setWalletName("WeChat Pay");
-                return true;
+                break;
 
             case 5:
                 setWalletName("iPay88");
-                return true;
+                break;
 
             case 6:
                 setWalletName("vcash");
-                return true;
-
-            default:
-                System.out.println(">> ERROR! Unable to process input.");
-                System.out.println(">> Please Try again.!!!");
-                return false;
+                break;
         }
     }
 
-    public String QRcode() {
-        return String.format("------------------------------------------------------------------\n" +
-                "                       E-Wallet Transaction                       \n" +
-                "------------------------------------------------------------------\n" +
-                ">> Scan The QR Code Given To Make The Payment   :                 \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                ">>                                                                \n" +
-                ">>         +++++                                 +++++            \n" +
-                ">>         +                                         +            \n" +
-                ">>         +    ++++++++++     +++++   ++++++++++    +            \n" +
-                ">>              + ++++++ +   ++   ++   + ++++++ +                 \n" +
-                ">>              + ++++++ +     ++ ++   + ++++++ +                 \n" +
-                ">>              + ++++++ +   ++++  +   + ++++++ +                 \n" +
-                ">>              ++++++++++   ++        ++++++++++                 \n" +
-                ">>                           +++++++                              \n" +
-                ">>               ++  ++++   +++   ++++    +++++                   \n" +
-                ">>              ++  ++  ++  +++++   ++++  +  ++++                 \n" +
-                ">>              +++++++++ +++  ++++++  + + ++++ +                 \n" +
-                ">>                        ++ +++++ ++++++  + + ++                 \n" +
-                ">>              ++++++++++  +++   +++    + + +++                  \n" +
-                ">>              + ++++++ +   +  ++++++    + + +++                 \n" +
-                ">>              + ++++++ +  +++  ++  +++    + + +                 \n" +
-                ">>              + ++++++ +  +  ++++++    + + +++                  \n" +
-                ">>         +    ++++++++++  +++ ++++ + + ++ ++++     +            \n" +
-                ">>         +                                         +            \n" +
-                ">>         +++++                                 +++++            \n" +
-                ">>                                                                \n" +
-                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    public double calTotalFees(double totalAmount) {
+        return (super.calTotalFees(totalAmount) + serviceCharges);
     }
 
-    public double calTotalFees() {
-        return (super.calTotalFees() + servicesCharges);
-    }
-
-    public String receipt() {
-        return super.receipt() + String.format(">> Services Charges    : RM %.2f                                  \n" +
-                                               ">> Total Fees          : RM %.2f                                  \n" +
-                                               ">> E-Wallet Apps Name  : %s                                       \n" +
-                                               ">> Recipient Reference : %s                                       \n" +
-                                               ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-                                                , calTotalFees(), servicesCharges, walletName,walletName); // , customerName);
+    public String toString() {
+        return super.toString() + String.format(">> E-Wallet Apps Name  : %s                                       \n" +
+                ">> E-Wallet ID         : %s                                       \n" +
+                ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n", walletName, walletID);
     }
 }
