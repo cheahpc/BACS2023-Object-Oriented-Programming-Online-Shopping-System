@@ -48,15 +48,6 @@ public class Main {
         boolean Start = true;
 
         if (!Start) {
-            // tempStrings[0] = "Ironm4n@toronto";
-            // setLine("something new", ACCOUNT_FILE);
-            // currentCustomer = new Guest("Full name", "0109939994", "random 123, penang",
-            // "2");
-            // currentCustomer = new RegisteredCustomer("Username", "PASSWORD", "fULLnaME",
-            // "0192929100", "MR.CHEAH@LIVE.COM", "random 123, penang");
-            // currentOrder = new Order("101", currentCustomer, payment,
-            // dateFormat.format(date), "Pass");
-            // msgBox("print something here", "this is the tittle", 0);
             for (int i = 1; i < getFileSize(GUEST_FILE); i++) {
                 echo(getAllLine(GUEST_FILE)[i], true);
             }
@@ -112,8 +103,11 @@ public class Main {
                         loopVal = false; // Proceed to Shopping Item
                         break;
 
-                    case 3: // USer Choose Sign Out
-                        theCust.reset();
+                    case 3: // User Choose Sign Out
+                        theCust.reset(); // Reset customer details
+                        theOrder.reset(); // Reset order details
+                        File orderfFile = new File(orderFileName);
+                        orderfFile.delete(); // Delete file means discard cart
                         continue Level1; /// Back to top layer
                     default:
                         break;
