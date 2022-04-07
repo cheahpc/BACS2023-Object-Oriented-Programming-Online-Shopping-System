@@ -37,8 +37,24 @@ public class E_Wallet extends Payment {
     }
 
     // method
+    public void interfaceOutput() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("                       E-Wallet Transaction                       ");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println(">> Select Your E-Wallet Name To Make The Payment:                 ");
+        System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(">>    1.      Touch 'N Go                                         ");
+        System.out.println(">>    2.      GrabPay                                             ");
+        System.out.println(">>    3.      Boost                                               ");
+        System.out.println(">>    4.      WeChat Pay                                          ");
+        System.out.println(">>    5.      iPay88                                              ");
+        System.out.println(">>    6.      vcash                                               ");
+        System.out.println(">>                                                                ");
+        System.out.println(">>    0.      Exit                                                ");
+        System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    }
 
-    public void determineWallet(int option) {
+    public void transactionMethod(int option) {
         switch (option) {
             case 1:
                 setWalletName("Touch 'N Go");
@@ -66,13 +82,9 @@ public class E_Wallet extends Payment {
         }
     }
 
-    public double calTotalFees(double totalAmount) {
-        return (super.calTotalFees(totalAmount) + serviceCharges);
-    }
-
     public String toString() {
-        return super.toString() + String.format(">> E-Wallet Apps Name  : %s                                       \n" +
-                ">> E-Wallet ID         : %s                                       \n" +
+        return super.toString() + String.format(">> E-Wallet Apps Name          : %s       \n" +
+                ">> E-Wallet ID                 : %s                                       \n" +
                 ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n", walletName, walletID);
     }
 }
