@@ -179,44 +179,48 @@ public class Main {
 
             // object
             Level4: while (true) {
-                clearScreen();
-                paymentDisplayInterface(0); // display main transaction interface
+                clearScreen(); // clear screen
+                pay.interfaceOutput(); // display main transaction interface
                 System.out.printf(">> Choose an option: ");
-                validation = inputPatternCheck(4, 0);
-                if (!validation) {
-                    msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                validation = inputPatternCheck(4, 0); // validation check user input option
+                if (!validation) { // if validation = false
+                    msgBox("Invalid!! \nInput must be in numbering!!\nOption available number 0-2 only!!",
+                            "Option", 0); // show error message
                     continue;
                 } else {
-                    option = Integer.parseInt(userInput);
+                    option = Integer.parseInt(userInput); // convert to integer variabl
                 }
 
                 switch (option) {
                     case 0:
-                        userInput = "";
+                        userInput = ""; // clear data
+                        option = 0; // clear data
                         continue Level1; // go to menu
 
                     // ---------------------------E-Wallet--------------------------------------------------------------
 
                     case 1:
                         // E-wallet
-                        determine(wallet);
+                        transactionMethod(option, wallet); // determine which transaction
+                        customerType(wallet); // determine what type of customer
 
                         while (true) {
                             clearScreen();
-                            paymentDisplayInterface(1); // display E-wallet interface
+                            wallet.interfaceOutput();// display E-wallet interface
                             System.out.printf(">> Choose an option: ");
-                            validation = inputPatternCheck(4, 1);
+                            validation = inputPatternCheck(4, 1); // validation check option
                             if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
-                                continue;
+                                msgBox("Invalid!! \nInput must be in numbering!!\nOption available number 0-6 only!!",
+                                        "Option", 0); // display error message
+                                continue; // go to loop
                             } else {
-                                option = Integer.parseInt(userInput);
+                                option = Integer.parseInt(userInput); // convert to int variable
                             }
 
-                            if (option == 0) {
-                                continue Level4;
+                            if (option == 0) { // if user option is 0
+                                continue Level4; // go to transaction main menu
                             } else {
-                                wallet.determineWallet(option);
+                                wallet.transactionMethod(option); // determine which app of E-Wallet
                             }
                             break;
                         }
@@ -233,21 +237,22 @@ public class Main {
                                     ">> Enter Your E-Wallet Information To Make The Payment:           ");
                             System.out.println(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                            System.out.print(">> E-Wallet ID: ");
-                            validation = inputPatternCheck(4, 2);
+                            System.out.print(">> E-Wallet ID (e.g. 12345): ");
+                            validation = inputPatternCheck(4, 2); // validation E-Wallet ID
                             if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput only be in 5 digit number only!!",
+                                        "Option", 0); // display error message
                                 continue;
                             } else {
-                                wallet.setWalletID(userInput);
+                                wallet.setWalletID(userInput); // store the E-Wallet ID value
                             }
                             break;
                         }
 
-                        while (true) {
+                        System.out.println(
+                                "------------------------------------------------------------------\n");
 
-                            System.out.println(
-                                    "------------------------------------------------------------------\n");
+                        while (true) {
                             clearScreen();
 
                             System.out.println(
@@ -263,35 +268,36 @@ public class Main {
                             System.out.println(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                             int tempCode = pay.getTACcode();
-                            System.out.println(">> TAR code (6-digit) : " + tempCode);
+                            System.out.println(">> TAC code (6-digit) : " + tempCode);
                             System.out.print(">> Enter the TAC code : ");
-                            validation = inputPatternCheck(4, 6);
-                            if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                            validation = inputPatternCheck(4, 6); // validation TAC code
+                            if (!validation) { // if validation is false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput only be in 6 digit number and match!!",
+                                        "TAC code", 0); // display error
                                 continue;
                             } else {
-                                tempInt = Integer.parseInt(userInput); // string to integer
+                                tempInt = Integer.parseInt(userInput); // convert string to integer
                             }
 
-                            if (tempInt == tempCode) {
-                                wallet.setStatus("Successful");
-                                System.out.println(">> Status : " + wallet.getStatus());
-                                pauseScreen();
+                            if (tempInt == tempCode) { // if user input match with TAC code given
+                                wallet.setStatus("Successful"); // set transaction status successful
+                                msgBox("Successful!!", "Transaction Status", 1); // display error message
                                 break;
+
                             } else {
-                                wallet.setStatus("Unsuccessful");
-                                System.out.println(">> Status : " + wallet.getStatus());
-                                pauseScreen();
+                                wallet.setStatus("Unsuccessful"); // set transaction status unsuccessful
+                                msgBox("Unsuccessful!!", "Transaction Status", 2); // display error message
                                 continue;
                             }
                         }
 
                         clearScreen();
                         displayTotal(theOrder.getTotalAmount(), wallet.getDiscountRate(), wallet.getServiceCharges(),
-                                wallet.calTotalFees(theOrder.getTotalAmount()));
+                                wallet.calTotalFees(theOrder.getTotalAmount())); // display total Fees
                         continuePrompt();
+
                         clearScreen();
-                        paymentDisplayInterface(3); // QRcode
+                        displayQRcode(); // QRcode
                         System.out.printf(
                                 ">> Total Fees                                         RM %.2f     \n",
                                 wallet.calTotalFees(theOrder.getTotalAmount()));
@@ -300,38 +306,42 @@ public class Main {
                         System.out.println(
                                 "------------------------------------------------------------------");
                         continuePrompt();
+
                         clearScreen();
                         receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
-                        System.out.printf(wallet.toString());
-                        updateOrderData(wallet);
+                        System.out.println(wallet.toString()); // display receipt
+                        updateOrderData(wallet); // update record
                         continuePrompt();
+
                         tempInt = 0; // clear data
                         option = 0; // unset data
                         userInput = ""; // unset data
-                        continue Level1;
+                        continue Level1; // go to the main menu
 
                     // ---------------------------Bank--------------------------------------------------------------
 
                     case 2:
                         // Bank
-                        determine(bank);
+                        transactionMethod(option, bank); // determine which transaction type
+                        customerType(bank); // determine what kind of customer
 
                         while (true) {
                             clearScreen();
-                            paymentDisplayInterface(2);
-                            System.out.printf(">> Choose an option: ");
-                            validation = inputPatternCheck(4, 1);
-                            if (validation == false) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                            bank.interfaceOutput(); // display bank interface
+                            System.out.printf(">> Choose an option : ");
+                            validation = inputPatternCheck(4, 1); // validation check option
+                            if (validation == false) { // if validation is false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nOption available number 0-6 only !!",
+                                        "Option", 0); // display error message
                                 continue;
                             } else {
-                                option = Integer.parseInt(userInput); // string to integer
+                                option = Integer.parseInt(userInput); // convert string to integer variable
                             }
 
-                            if (option == 0) {
-                                continue Level4;
+                            if (option == 0) { // if option equal to 0
+                                continue Level4; // go back to transaction main menu
                             } else {
-                                bank.determineBank(option);
+                                bank.transactionMethod(option); // determine which bank to make tramsaction
                             }
                             break;
                         }
@@ -349,45 +359,49 @@ public class Main {
                             System.out.println(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                             System.out.print(">>    1. Card Account Number (e.g. 1234 5678 9876 5432) : ");
-                            validation = inputPatternCheck(4, 3);
-                            if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                            validation = inputPatternCheck(4, 3); // validation check account number
+                            if (!validation) { // if validation false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput each 4 digit number after must have space!!",
+                                        "Account No", 0); // display error message
                                 continue;
                             } else {
-                                bank.setAccountNo(userInput);
+                                bank.setAccountNo(userInput); // store account number
                             }
 
                             break;
                         }
                         while (true) {
                             System.out.print(">>    2. Expiration Date     (e.g. 07/23)               : ");
-                            validation = inputPatternCheck(4, 4);
-                            if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                            validation = inputPatternCheck(4, 4); // validation check expire check
+                            if (!validation) { // if validation false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput must contain the “/” symbol!!",
+                                        "Expiration Date", 0); // display error message
                                 continue;
                             } else {
-                                bank.setExpireDate(userInput);
+                                bank.setExpireDate(userInput); // store expire date
                             }
 
                             break;
                         }
                         while (true) {
                             System.out.print(">>    3. CV Code             (e.g. 123)                 : ");
-                            validation = inputPatternCheck(4, 5);
-                            if (validation == false) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
+                            validation = inputPatternCheck(4, 5); // validation check cv code
+                            if (validation == false) { // if validation false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput only be in 3 digit number!!",
+                                        "CV Code", 0); // display error message
                                 continue;
                             } else {
                                 tempInt = Integer.parseInt(userInput); // string to integer
-                                bank.setCvCode(tempInt);
+                                bank.setCvCode(tempInt); // store cv code
                             }
                             System.out.printf(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                             break;
                         }
+
                         clearScreen();
                         displayTotal(theOrder.getTotalAmount(), bank.getDiscountRate(), bank.getServiceCharges(),
-                                bank.calTotalFees(theOrder.getTotalAmount()));
+                                bank.calTotalFees(theOrder.getTotalAmount())); // display total
                         continuePrompt();
 
                         clearScreen();
@@ -404,34 +418,35 @@ public class Main {
                                     ">> Please enter 6-digit TAC to verify your identity:              ");
                             System.out.println(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                            int tempCode = pay.getTACcode();
-                            System.out.println(">> TAR code (6-digit) : " + tempCode);
+                            int tempCode = pay.getTACcode(); // assign temp
+                            System.out.println(">> TAC code (6-digit) : " + tempCode);
                             System.out.print(">> Enter the TAC code : ");
-                            validation = inputPatternCheck(4, 6);
-                            if (!validation) {
-                                msgBox("Invalid!! Please Try Again!!", "Option", 0);
-                                continue;
+                            validation = inputPatternCheck(4, 6); // validation check TAC code
+                            if (!validation) { // if validation false
+                                msgBox("Invalid!! \nInput must be in numbering!!\nInput only be in 6 digit number and match!!",
+                                        "TAC Code", 0); // display error message
+                                continue; // go to loop
                             } else {
-                                tempInt = Integer.parseInt(userInput); // string to integer
+                                tempInt = Integer.parseInt(userInput); // convert string to integer variable
                             }
 
-                            if (tempInt == tempCode) {
-                                bank.setStatus("Successful");
-                                System.out.println(">> Status : " + bank.getStatus());
-                                pauseScreen();
+                            if (tempInt == tempCode) { // if user input match with TAC code given
+                                bank.setStatus("Successful"); // assign successful in status
+                                msgBox("Successful!!", "Transaction Status", 1); // display success message
                                 break;
                             } else {
-                                bank.setStatus("Unsuccessful");
-                                System.out.println(">> Status : " + bank.getStatus());
-                                pauseScreen();
+                                bank.setStatus("Unsuccessful"); // assign unsuccess in status
+                                msgBox("Unsuccessful!!", "Transaction Status", 2); // display unsuccessmessage
                                 continue;
                             }
                         }
                         continuePrompt();
+
                         clearScreen();
                         receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
-                        System.out.println(bank.toString());
-                        updateOrderData(bank);
+                        System.out.println(bank.toString()); // display receipt
+                        updateOrderData(bank); // update record
+
                         continuePrompt();
                         tempInt = 0; // clear data
                         option = 0; // uset data
@@ -439,8 +454,7 @@ public class Main {
                         continue Level1;
 
                     default:
-                        System.out.println(">> ERROR! Unable to process input.");
-                        System.out.println(">> Please Try again.!!!");
+                        msgBox("Invalid!! Unable to process input!!", "ERROR", 0); // display error message
                 }
             }
 
@@ -767,26 +781,34 @@ public class Main {
     // endregion MENU FUNCTION C
 
     // region MENU FUNCTION D
-    // determine object class
-    public static void determine(Payment object) {
-
-        if (object instanceof E_Wallet) {
-            object.setTransactionType("E-Wallet"); // assign "E-Wallet" to transaction type
-            object.setServiceCharges(0.50);
-        } else if (object instanceof Bank) {
-            object.setTransactionType("Bank"); // assign "Bank" to transaction type
-            object.setServiceCharges(0.50);
-        }
-
-        if (theCust instanceof Guest) {
-            object.setDiscountRate(0.10); // discount 10%
-            System.out.println(">> Welcome Guest and thanks for using our ordering system~");
-        } else if (theCust instanceof RegisteredCustomer) {
-            object.setDiscountRate(0.00); // dicount 0%
-            System.out.println(">> Welcome Member and thanks for using our ordering system~");
+    // determine what kind of customer
+    public static void customerType(Payment object) {
+        if (theCust instanceof Guest) { // Guest will not have any discount
+            object.setDiscountRate(0.00); // discount 0%
+            msgBox("Welcome Guest~\nIn payment state, you will \"NO\" have any discount~\nIf you want, you can register as an user.",
+                    "Welcome", 1);
+        } else if (theCust instanceof RegisteredCustomer) { // Member will have 10% discount
+            object.setDiscountRate(0.10); // dicount 10%
+            msgBox("Welcome Member~\nIn payment state, you will have \"10%\" discount~", "Welcome", 1);
         }
     }
 
+    // determine which type of transaction method
+    public static void transactionMethod(int option, Payment object) {
+        switch (option) {
+            case 1:
+                object.setTransactionType("E-Wallet"); // assign "E-Wallet" to transaction type
+                object.setServiceCharges(0.50); // E-Wallet will have RM0.50 services charges
+                break;
+
+            case 2:
+                object.setTransactionType("Bank"); // assign "Bank" to transaction type
+                object.setServiceCharges(1.00); // Bank will have RM1 services charges
+                break;
+        }
+    }
+
+    // update the payment record
     public static void updateOrderData(Payment obj) {
         // Update order txt with new successful order details
         setLine(String.format("%s:%s:%s:PAID:%s:%.2f", theOrder.getOrderID(), theOrder.getOrderDate(),
@@ -797,41 +819,6 @@ public class Main {
         orderFileName = null; // Reset the order file name to close the order file
         theOrder.reset(); // Reset the order fields
         toLevel2 = true;
-    }
-
-    // pause the screen
-    public static void pauseScreen() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    // receipt output
-    public static void displayTotal(double totalAmount, double discountRate, double serviceCharges, double totalFees) {
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf("                          Total Fees                              \n");
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.printf(">> Total Amount            : RM %.2f                              \n", totalAmount);
-        System.out.printf(">> (-) Discount Rate (%s)   : %.2f                                 \n", "%", discountRate);
-        System.out.printf(">> (+) Services Charges    : RM %.2f                              \n", serviceCharges);
-        System.out.printf(">> Total Fees              : RM %.2f                              \n", totalFees);
-        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.printf("------------------------------------------------------------------\n");
-    }
-
-    // receipt output
-    public static void receipt(String orderID, String custName, Date date, double totalAmount) {
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf("                        Transaction Receipt                       \n");
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.printf(">> Order ID            : %s                                       \n", orderID);
-        System.out.printf(">> Recipient Reference : %s                                       \n", custName);
-        System.out.printf(">> Date Created        : %s                                       \n", date);
-        System.out.printf(">> Total Amount        : RM %.2f                                  \n", totalAmount);
     }
     // endregion MENU FUNCTION D
 
@@ -1276,92 +1263,60 @@ public class Main {
     // endregion DISPLAY
 
     // region TRANSACTION DISPLAY
-    public static void paymentDisplayInterface(int interfaceType) {
-        switch (interfaceType) {
-            case 0:
-                // Transaction interface
-                System.out.println("------------------------------------------------------------------");
-                System.out.println("                 Transaction of Ordering System                   ");
-                System.out.println("------------------------------------------------------------------");
-                System.out.println(">> Payment Option/Method :                                        ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                System.out.println(">>    1.      E-Wallet                                            ");
-                System.out.println(">>    2.      Bank                                                ");
-                System.out.println(">>                                                                ");
-                System.out.println(">>    0.      Exit                                                ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                break;
+    // total fees output
+    public static void displayTotal(double totalAmount, double discountRate, double serviceCharges, double totalFees) {
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf("                          Total Fees                              \n");
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        System.out.printf(">> Total Amount            : RM %.2f                              \n", totalAmount);
+        System.out.printf(">> (-) Discount Rate (%s)   : %.2f                                 \n", "%", discountRate);
+        System.out.printf(">> (+) Services Charges    : RM %.2f                              \n", serviceCharges);
+        System.out.printf(">> Total Fees              : RM %.2f                              \n", totalFees);
+        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        System.out.printf("------------------------------------------------------------------\n");
+    }
 
-            case 1:
-                // E-wallet interface
-                System.out.println("------------------------------------------------------------------");
-                System.out.println("                       E-Wallet Transaction                       ");
-                System.out.println("------------------------------------------------------------------");
-                System.out.println(">> Select Your E-Wallet Name To Make The Payment:                 ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                System.out.println(">>    1.      Touch 'N Go                                         ");
-                System.out.println(">>    2.      GrabPay                                             ");
-                System.out.println(">>    3.      Boost                                               ");
-                System.out.println(">>    4.      WeChat Pay                                          ");
-                System.out.println(">>    5.      iPay88                                              ");
-                System.out.println(">>    6.      vcash                                               ");
-                System.out.println(">>                                                                ");
-                System.out.println(">>    0.      Exit                                                ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                break;
+    // receipt output
+    public static void receipt(String orderID, String custName, Date date, double totalAmount) {
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf("                        Transaction Receipt                       \n");
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        System.out.printf(">> Order ID                    : %s                               \n", orderID);
+        System.out.printf(">> Recipient Reference         : %s                               \n", custName);
+        System.out.printf(">> Date Created                : %s                               \n", date);
+        System.out.printf(">> Total Amount                : RM %.2f                          \n", totalAmount);
+    }
 
-            case 2:
-                // Bank interface
-                System.out.println("------------------------------------------------------------------");
-                System.out.println("                        Bank Transaction                          ");
-                System.out.println("------------------------------------------------------------------");
-                System.out.println(">> Select Your Bank Name To Make The Payment:                     ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                System.out.println(">>    1.      Hong Leong Bank                                     ");
-                System.out.println(">>    2.      RHB Bank                                            ");
-                System.out.println(">>    3.      MAY Bank                                            ");
-                System.out.println(">>    4.      Public Bank                                         ");
-                System.out.println(">>    5.      CIMB Bank                                           ");
-                System.out.println(">>    6.      AM Bank                                             ");
-                System.out.println(">>                                                                ");
-                System.out.println(">>    0.      Exit                                                ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                break;
-
-            case 3:
-                // QR code interface
-                System.out.println("------------------------------------------------------------------");
-                System.out.println("                       E-Wallet Transaction                       ");
-                System.out.println("------------------------------------------------------------------");
-                System.out.println(">> Scan The QR Code Given To Make The Payment :                   ");
-                System.out.println(">>                                                                ");
-                System.out.println(">>         +++++                                 +++++            ");
-                System.out.println(">>         +                                         +            ");
-                System.out.println(">>         +    ++++++++++     +++++   ++++++++++    +            ");
-                System.out.println(">>              + ++++++ +   ++   ++   + ++++++ +                 ");
-                System.out.println(">>              + ++++++ +     ++ ++   + ++++++ +                 ");
-                System.out.println(">>              + ++++++ +   ++++  +   + ++++++ +                 ");
-                System.out.println(">>              ++++++++++   ++        ++++++++++                 ");
-                System.out.println(">>                           +++++++                              ");
-                System.out.println(">>               ++  ++++   +++   ++++    +++++                   ");
-                System.out.println(">>              ++  ++  ++  +++++   ++++  +  ++++                 ");
-                System.out.println(">>              +++++++++ +++  ++++++  + + ++++ +                 ");
-                System.out.println(">>                        ++ +++++ ++++++  + + ++                 ");
-                System.out.println(">>              ++++++++++  +++   +++    + + +++                  ");
-                System.out.println(">>              + ++++++ +   +  ++++++    + + +++                 ");
-                System.out.println(">>              + ++++++ +  +++  ++  +++    + + +                 ");
-                System.out.println(">>              + ++++++ +  +  ++++++    + + +++                  ");
-                System.out.println(">>         +    ++++++++++  +++ ++++ + + ++ ++++     +            ");
-                System.out.println(">>         +                                         +            ");
-                System.out.println(">>         +++++                                 +++++            ");
-                System.out.println(">>                                                                ");
-                System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                break;
-
-            default:
-                break;
-        }
-
+    // QR code output
+    public static void displayQRcode() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("                       E-Wallet Transaction                       ");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println(">> Scan The QR Code Given To Make The Payment :                   ");
+        System.out.println(">>                                                                ");
+        System.out.println(">>         +++++                                 +++++            ");
+        System.out.println(">>         +                                         +            ");
+        System.out.println(">>         +    ++++++++++     +++++   ++++++++++    +            ");
+        System.out.println(">>              + ++++++ +   ++   ++   + ++++++ +                 ");
+        System.out.println(">>              + ++++++ +     ++ ++   + ++++++ +                 ");
+        System.out.println(">>              + ++++++ +   ++++  +   + ++++++ +                 ");
+        System.out.println(">>              ++++++++++   ++        ++++++++++                 ");
+        System.out.println(">>                           +++++++                              ");
+        System.out.println(">>               ++  ++++   +++   ++++    +++++                   ");
+        System.out.println(">>              ++  ++  ++  +++++   ++++  +  ++++                 ");
+        System.out.println(">>              +++++++++ +++  ++++++  + + ++++ +                 ");
+        System.out.println(">>                        ++ +++++ ++++++  + + ++                 ");
+        System.out.println(">>              ++++++++++  +++   +++    + + +++                  ");
+        System.out.println(">>              + ++++++ +   +  ++++++    + + +++                 ");
+        System.out.println(">>              + ++++++ +  +++  ++  +++    + + +                 ");
+        System.out.println(">>              + ++++++ +  +  ++++++    + + +++                  ");
+        System.out.println(">>         +    ++++++++++  +++ ++++ + + ++ ++++     +            ");
+        System.out.println(">>         +                                         +            ");
+        System.out.println(">>         +++++                                 +++++            ");
+        System.out.println(">>                                                                ");
+        System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
     // endregion TRANSACTION DISPLAY
 
@@ -1625,7 +1580,7 @@ public class Main {
                         regExPat = Pattern.compile("[0-6]{1}");
                         break;
                     case 2: // E-Wallet ID
-                        regExPat = Pattern.compile("[0-9]{15}");
+                        regExPat = Pattern.compile("[0-9]{5}");
                         break;
                     case 3: // Bank Account No
                         regExPat = Pattern.compile("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}");

@@ -55,7 +55,24 @@ public class Bank extends Payment {
     }
 
     // method
-    public void determineBank(int option) {
+    public void interfaceOutput() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("                        Bank Transaction                          ");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println(">> Select Your Bank Name To Make The Payment:                     ");
+        System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(">>    1.      Hong Leong Bank                                     ");
+        System.out.println(">>    2.      RHB Bank                                            ");
+        System.out.println(">>    3.      MAY Bank                                            ");
+        System.out.println(">>    4.      Public Bank                                         ");
+        System.out.println(">>    5.      CIMB Bank                                           ");
+        System.out.println(">>    6.      AM Bank                                             ");
+        System.out.println(">>                                                                ");
+        System.out.println(">>    0.      Exit                                                ");
+        System.out.println(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    }
+
+    public void transactionMethod(int option) {
         switch (option) {
             case 1:
                 // Hong Leong Bank
@@ -89,13 +106,9 @@ public class Bank extends Payment {
         }
     }
 
-    public double calTotalFees(double totalAmount) {
-        return (super.calTotalFees(totalAmount) + serviceCharges);
-    }
-
     public String toString() {
-        return super.toString() + String.format(">> Bank Name           : %s                                       \n" +
-                ">> From Account Number : %s                                       \n" +
+        return super.toString() + String.format(">> Bank Name                   : %s       \n" +
+                ">> From Account Number         : %s                                       \n" +
                 ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n", bankName, accountNo);
     }
 }
