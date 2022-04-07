@@ -15,35 +15,35 @@ import javax.swing.*;
 import java.util.regex.*;
 
 public class Main {
-    public static final String DELIMITER = ":";
-    public static final String ACCOUNT_FILE = "account.txt";
-    public static final String GUEST_FILE = "guest.txt";
-    public static final String ITEM_FILE = "item.txt";
-    public static final String ORDER_FILE = "order.txt";
-    public static String orderFileName = "";
-    public static int option;
+    public static final String DELIMITER = ":"; // Set the delimiters of datalines
+    public static final String ACCOUNT_FILE = "account.txt"; // Set file name for Account file
+    public static final String GUEST_FILE = "guest.txt"; // Set file name for Guest file
+    public static final String ITEM_FILE = "item.txt"; // Set file name for Item file
+    public static final String ORDER_FILE = "order.txt"; // Set file name for Order file
+    public static String orderFileName = ""; // To store the current oder file name
+    public static int option; // To store the option at different menu
     public static int tempInt; // for temporary use
-    public static int itemCounter = 0;
-    public static double subAmount = 0;
-    public static double totalAmount = 0;
-    public static String userInput;
-    public static String[] tempStr = new String[10];
-    public static boolean windowShopping = false;
-    public static boolean loopVal = true;
-    public static boolean toLevel2 = false;
-    public static Scanner sc = new Scanner(System.in);
-    static Customer theCust;
-    static Order theOrder;
-    static Product theProduct;
+    public static int itemCounter = 0; // To keep count of the item selected by the user
+    public static double subAmount = 0; // Temporay variable to count the sub amount
+    public static double totalAmount = 0; // Variable used to count the total amount from sub amounts
+    public static String userInput; // String variable to keep the user's input
+    public static String[] tempStr = new String[10]; // General purposes temporary string array
+    public static boolean windowShopping = false; // Swtich to determine if user is windowshopping
+    public static boolean loopVal = true; // The semaphore for level loop
+    public static boolean toLevel2 = false; // Determines if the program should go to Main page or user account page
+    public static Scanner sc = new Scanner(System.in); // Create object to read the input
+    static Customer theCust; // Object for Customer
+    static Order theOrder; // Object for Order
+    static Product theProduct; // Object for Product
     static Payment pay = new Payment();
     static E_Wallet wallet = new E_Wallet();
     static Bank bank = new Bank();
-    // static Payment thePayment;
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    static Date date = new Date();
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Setting the date format
+    static Date date = new Date(); // Create object for date
 
     public static void main(String[] args) {
         // region DEBUG
+        // For debugging classes
         // boolean Start = false;
         boolean Start = true;
 
@@ -102,7 +102,6 @@ public class Main {
                     case 2: // Shop Now
                         loopVal = false; // Proceed to Shopping Item
                         break;
-
                     case 3: // User Choose Sign Out
                         theCust.reset(); // Reset customer details
                         theOrder.reset(); // Reset order details
@@ -198,7 +197,6 @@ public class Main {
                         continue Level1; // go to menu
 
                     // ---------------------------E-Wallet--------------------------------------------------------------
-
                     case 1:
                         // E-wallet
                         transactionMethod(option, wallet); // determine which transaction
@@ -384,15 +382,15 @@ public class Main {
                             break;
                         }
                         while (true) {
-                            System.out.print(">>    3. CV Code             (e.g. 123)                 : ");
-                            validation = inputPatternCheck(4, 5); // validation check cv code
+                            System.out.print(">>    3. CVV Code             (e.g. 123)                 : ");
+                            validation = inputPatternCheck(4, 5); // validation check cvv code
                             if (validation == false) { // if validation false
                                 msgBox("Invalid!! \nInput must be in numbering!!\nInput only be in 3 digit number!!",
-                                        "CV Code", 0); // display error message
+                                        "CVV Code", 0); // display error message
                                 continue;
                             } else {
                                 tempInt = Integer.parseInt(userInput); // string to integer
-                                bank.setCvCode(tempInt); // store cv code
+                                bank.setCvvCode(tempInt); // store cvv code
                             }
                             System.out.printf(
                                     ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
@@ -441,12 +439,10 @@ public class Main {
                             }
                         }
                         continuePrompt();
-
                         clearScreen();
                         receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
                         System.out.println(bank.toString()); // display receipt
                         updateOrderData(bank); // update record
-
                         continuePrompt();
                         tempInt = 0; // clear data
                         option = 0; // uset data
@@ -636,7 +632,6 @@ public class Main {
             for (int i = 0; i < 3; i++) {
                 if (tempStr[i] == null) {
                     // Continue with this menu if there are empty field
-                    echo("testing 123 abc debug mode", true);
                     continue GuestSignUp;
                 }
             }
@@ -691,7 +686,6 @@ public class Main {
         } while (tempStr[0] == null);
 
         // Set order object
-
         totalAmount = 0;
         int statusCount = 0;
         // Count number of status
@@ -731,7 +725,6 @@ public class Main {
 
         return;
     }
-
     // endregion MENU Function B
 
     // region MENU FUNCTION C
@@ -777,7 +770,6 @@ public class Main {
             }
         } while (true);
     }
-
     // endregion MENU FUNCTION C
 
     // region MENU FUNCTION D
@@ -1259,7 +1251,6 @@ public class Main {
         }
 
     }
-
     // endregion DISPLAY
 
     // region TRANSACTION DISPLAY
@@ -1588,7 +1579,7 @@ public class Main {
                     case 4: // Bank Expire Date
                         regExPat = Pattern.compile("[01]{1}[0-9]{1}/[0-3]{1}[0-9]{1}");
                         break;
-                    case 5: // Bank CV Code
+                    case 5: // Bank CVV Code
                         regExPat = Pattern.compile("[0-9]{3}");
                         break;
                     case 6: // TAC Code

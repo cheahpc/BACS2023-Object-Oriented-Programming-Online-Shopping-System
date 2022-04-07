@@ -3,7 +3,7 @@ public class Bank extends Payment {
 
     // data properties
     private String bankName, accountNo, expireDate;
-    private int cvCode;
+    private int cvvCode;
 
     // no arg contsructor
     public Bank() {
@@ -12,12 +12,12 @@ public class Bank extends Payment {
 
     // arg constructor
     public Bank(double totalFees, double discountRate, String status, String transactionType, double serviceCharges,
-            String bankName, String accountNo, String expireDate, int cvCode) {
+            String bankName, String accountNo, String expireDate, int cvvCode) {
         super(totalFees, discountRate, status, transactionType, serviceCharges); // superclass portion
         this.accountNo = accountNo;
         this.bankName = bankName;
         this.expireDate = expireDate;
-        this.cvCode = cvCode;
+        this.cvvCode = cvvCode;
     }
 
     // setter
@@ -33,8 +33,8 @@ public class Bank extends Payment {
         this.expireDate = expireDate;
     }
 
-    public void setCvCode(int cvCode) {
-        this.cvCode = cvCode;
+    public void setCvvCode(int cvvCode) {
+        this.cvvCode = cvvCode;
     }
 
     // getter
@@ -50,8 +50,8 @@ public class Bank extends Payment {
         return expireDate;
     }
 
-    public int getCvCode() {
-        return cvCode;
+    public int getCvvCode() {
+        return cvvCode;
     }
 
     // method

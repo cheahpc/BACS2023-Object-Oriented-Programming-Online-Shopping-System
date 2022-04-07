@@ -13,7 +13,7 @@ public class Payment {
     public Payment() {
 
     }
-
+    
     // arg constructor
     public Payment(double totalFees, double discountRate, String status, String transactionType,
             double serviceCharges) {

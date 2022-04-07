@@ -89,7 +89,4 @@ public class Order {
         customerDetails = null;
         payment = null;
     }
-
-    
-
 }

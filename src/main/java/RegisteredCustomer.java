@@ -9,8 +9,8 @@ public class RegisteredCustomer extends Customer {
     public RegisteredCustomer() {
     }
 
-    public RegisteredCustomer(String fullName, String contactNo, String address, String userName, String password,
-            String email) {
+    public RegisteredCustomer(String fullName, String contactNo, String address,
+            String userName, String password, String email) {
         super(fullName, contactNo, address);
         this.userName = userName;
         this.password = password;
