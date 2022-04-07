@@ -290,7 +290,7 @@ public class Main {
                         }
 
                         clearScreen();
-                        displayTotal(theOrder.getTotalAmount(), wallet.getDiscountRate(), pay.getServiceCharges(),
+                        displayTotal(theOrder.getTotalAmount(), wallet.getDiscountRate(), wallet.getServiceCharges(),
                                 wallet.calTotalFees(theOrder.getTotalAmount()));
                         continuePrompt();
 
@@ -394,12 +394,12 @@ public class Main {
                             break;
                         }
                         clearScreen();
-                        displayTotal(theOrder.getTotalAmount(), bank.getDiscountRate(), pay.getServiceCharges(),
+                        displayTotal(theOrder.getTotalAmount(), bank.getDiscountRate(), bank.getServiceCharges(),
                                 bank.calTotalFees(theOrder.getTotalAmount()));
                         continuePrompt();
 
-                        clearScreen();
                         while (true) {
+                            clearScreen();
                             System.out.println(
                                     "------------------------------------------------------------------");
                             System.out.println(
@@ -797,7 +797,7 @@ public class Main {
                 break;
         }
     }
-    
+
     // pause the screen
     public static void pauseScreen() {
         try {
@@ -806,11 +806,11 @@ public class Main {
             Thread.currentThread().interrupt();
         }
     }
-    
-    public static void updateOrderData(Payment obj) {
+
+    public static void updateOrderData(Payment object) {
         // Update order txt with new successful order details
         setLine(String.format("%s:%s:%s:PAID:%s:%.2f", theOrder.getOrderID(), theOrder.getOrderDate(),
-                theCust.getUserID(), obj.getTransactionType(), obj.getTotalFees()), ORDER_FILE);
+                theCust.getUserID(), object.getTransactionType(), object.getTotalFees()), ORDER_FILE);
         // Update user order file with latest payment status
         setLine(String.format("ORDER:STATUS,Paid:STATUS_DATE:%s",
                 theOrder.getOrderDate()), orderFileName);
@@ -1281,12 +1281,13 @@ public class Main {
         System.out.printf("                        Transaction Receipt                       \n");
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.printf(">> Order ID                : %s                                   \n", orderID);
-        System.out.printf(">> Recipient Reference     : %s                                   \n", custName);
-        System.out.printf(">> Date Created            : %s                                   \n", date);
-        System.out.printf(">> Total Amount            : RM %.2f                              \n", totalAmount);
+        System.out.printf(">> Order ID                    : %s                               \n", orderID);
+        System.out.printf(">> Recipient Reference         : %s                               \n", custName);
+        System.out.printf(">> Date Created                : %s                               \n", date);
+        System.out.printf(">> Total Amount                : RM %.2f                          \n", totalAmount);
     }
-
+    
+    // display QR code
     public static void displayQRcode() {
         System.out.println("------------------------------------------------------------------");
         System.out.println("                       E-Wallet Transaction                       ");
@@ -1577,7 +1578,7 @@ public class Main {
                         regExPat = Pattern.compile("[0-6]{1}");
                         break;
                     case 2: // E-Wallet ID
-                        regExPat = Pattern.compile("[0-9]{15}");
+                        regExPat = Pattern.compile("[0-9]{5}");
                         break;
                     case 3: // Bank Account No
                         regExPat = Pattern.compile("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}");
