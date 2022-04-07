@@ -56,7 +56,7 @@ public class Payment {
 
     public int getTACcode() {
         Random randNum = new Random();
-        return TACcode = (int) (randNum.nextInt(999999) + 100000);
+        return TACcode = (int) (randNum.nextInt(899999) + 100000);
     }
 
     public String getTransactionType() {
@@ -91,11 +91,11 @@ public class Payment {
     }
 
     public String toString() {
-        return String.format(">> (-) Discount Rate (%s)      : %.2f     \n" +
-                ">> (+) Services Charges       : RM %.2f  \n" +
-                ">> Total Fees                 : RM %.2f  \n" +
-                ">> Status                     : %s       \n" +
-                ">> Transaction type           : %s       \n", "%", discountRate, serviceCharges,
+        return String.format(">> (-) Discount Rate (%s)       : %.2f     \n" +
+                ">> (+) Services Charges        : RM %.2f  \n" +
+                ">> Total Fees                  : RM %.2f  \n" +
+                ">> Status                      : %s       \n" +
+                ">> Transaction type            : %s       \n", "%", discountRate, serviceCharges,
                 totalFees, status, transactionType);
     }
 }
