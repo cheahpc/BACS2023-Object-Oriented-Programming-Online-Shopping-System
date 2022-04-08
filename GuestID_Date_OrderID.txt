@@ -1,7 +1,0 @@
-No : Item ID : Item Name : Item Price : Qty
-1:2:5:ProductA:30.20:1
-2:2:4:ProductB:14.50:1
-3:2:3:ProductC:3.70:4
-4:2:2:ProductD:9.80:3
-5:2:1:ProductE:11.20:3
-ORDER:Pending Payment:05-04-2022

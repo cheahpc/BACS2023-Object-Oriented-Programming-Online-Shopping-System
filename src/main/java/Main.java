@@ -104,8 +104,10 @@ public class Main {
                     case 3: // User Choose Sign Out
                         theCust.reset(); // Reset customer details
                         theOrder.reset(); // Reset order details
-                        File orderfFile = new File(orderFileName);
-                        orderfFile.delete(); // Delete file means discard cart
+                        if (orderFileName != "") {
+                            File orderfFile = new File(orderFileName);
+                            orderfFile.delete(); // Delete file means discard cart
+                        }
                         continue Level1; /// Back to top layer
                     default:
                         break;
@@ -137,7 +139,7 @@ public class Main {
                         if (windowShopping) {
                             continue Level1;
                         } else {
-                            if (itemCounter > 0) {
+                            if (Double.parseDouble(tempStr[9]) > 0) {
                                 tempStr[9] = String.format("ORDER:STATUS:Pending Payment:STATUS_DATE:%s",
                                         theOrder.getOrderDate());
                                 setLine(tempStr[9], orderFileName);
@@ -194,7 +196,6 @@ public class Main {
                         userInput = ""; // clear data
                         option = 0; // clear data
                         continue Level1; // go to menu
-
                     // ---------------------------E-Wallet--------------------------------------------------------------
                     case 1:
                         // E-wallet
@@ -309,14 +310,13 @@ public class Main {
                         System.out.println(wallet.toString()); // display receipt
                         updateOrderData(wallet); // update record
                         continuePrompt(); // press enter to continue
-
+                        orderFileName = "";
                         tempInt = 0; // clear data
                         option = 0; // unset data
                         userInput = ""; // unset data
                         continue Level1; // go to the main menu
 
                     // ---------------------------Bank--------------------------------------------------------------
-
                     case 2:
                         // Bank
                         transactionMethod(option, bank); // determine which transaction type
@@ -443,6 +443,7 @@ public class Main {
                         System.out.println(bank.toString()); // display receipt
                         updateOrderData(bank); // update record
                         continuePrompt();
+                        orderFileName = "";
                         tempInt = 0; // clear data
                         option = 0; // uset data
                         userInput = ""; // unset data
@@ -450,15 +451,16 @@ public class Main {
 
                     default:
                         msgBox("Invalid!! Unable to process input!!", "ERROR", 0); // display error message
+                        break;
                 }
             }
-
         }
         // endregion Level 4 - Payment
     }
 
     // region MENU FUNCTION A
     public static boolean runA_UserLogin() {
+        tempStr[0] = null;
         UserLogin: do {
             switch (getOption(1, 1)) {
                 case 1: // User Choose 1 - User Name
@@ -665,6 +667,7 @@ public class Main {
 
     // region MENU Function B
     public static void runB_TrackOrder() {
+        tempStr[0] = null; // Reset variable before reading
         do {
             switch (getOption(2, 1)) {
                 case 1: // User Choose 1 - Set Order ID
@@ -684,6 +687,19 @@ public class Main {
                     return;
             }
         } while (tempStr[0] == null);
+
+        theOrder = new Order(tempStr[0], theCust, pay,
+                splitData(getLine(tempStr[0], 0, ORDER_FILE))[1], totalAmount,
+                splitData(getLine(tempStr[0], 0, ORDER_FILE))[2]);
+
+        // Set file name to retrieve order file
+        if (theCust instanceof Guest) {
+            orderFileName = String.format("Guest_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
+                    theOrder.getOrderID());
+        } else if (theCust instanceof RegisteredCustomer) {
+            orderFileName = String.format("User_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
+                    theOrder.getOrderID());
+        }
 
         // Set order object
         totalAmount = 0;
@@ -705,24 +721,11 @@ public class Main {
             echo(tempStr[4], true);
         }
 
-        theOrder = new Order(tempStr[0], theCust, pay,
-                splitData(getLine(tempStr[0], 0, ORDER_FILE))[1], totalAmount,
-                splitData(getLine(tempStr[0], 0, ORDER_FILE))[2]);
-
-        // Set file name to retrieve order file
-        if (theCust instanceof Guest) {
-            orderFileName = String.format("Guest_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
-                    theOrder.getOrderID());
-        } else if (theCust instanceof RegisteredCustomer) {
-            orderFileName = String.format("User_%s_%s_%s.txt", theCust.getUserID(), theOrder.getOrderDate(),
-                    theOrder.getOrderID());
-        }
-
         displayInterface(2, 12);
         Arrays.fill(tempStr, null); // Reset Array
         theOrder.reset();
         continuePrompt(); // Pause for the user to check order details
-
+        orderFileName = ""; // Reset file name
         return;
     }
     // endregion MENU Function B
@@ -806,7 +809,7 @@ public class Main {
         setLine(String.format("%s:%s:%s:PAID:%s:%.2f", theOrder.getOrderID(), theOrder.getOrderDate(),
                 theCust.getUserID(), obj.getTransactionType(), obj.getTotalFees()), ORDER_FILE);
         // Update user order file with latest payment status
-        setLine(String.format("ORDER:STATUS,Paid:STATUS_DATE:%s",
+        setLine(String.format("ORDER:STATUS:Paid:STATUS_DATE:%s",
                 theOrder.getOrderDate()), orderFileName);
         orderFileName = null; // Reset the order file name to close the order file
         theOrder.reset(); // Reset the order fields
@@ -1091,7 +1094,7 @@ public class Main {
                         // Display order total and order status
                         echo(">>", true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
-                        echo(">> Order Total        : RM " + totalAmount, true);
+                        echo(String.format(">> Order Total        : RM %.2f", totalAmount), true);
                         echo(">> Order Status       : " + tempStr[9], true);
                         echo(">> Order Status Date  : " + tempStr[8], true);
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -1133,6 +1136,7 @@ public class Main {
                             echo(String.format(">>   101.      View Cart, Cart Ammount : RM %.2f", totalAmount), true);
                             echo(">>   102.      Proceed to payment", true);
                             echo(">>   103.      Back", true);
+                            tempStr[9] = String.valueOf(totalAmount);
                             totalAmount = 0;
                         }
                         echo(">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
@@ -1424,11 +1428,8 @@ public class Main {
                                 message = "Input option denied";
                                 title = "Invalid Input";
                                 break;
-
                         }
-
                         break;
-
                     default:
                         break;
                 }

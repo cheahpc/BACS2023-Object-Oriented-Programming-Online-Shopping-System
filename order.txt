@@ -1,3 +1,1 @@
-OrderID : Order Date : Customer ID : OrderStatus : Payment Method : Paid Amount
-1:07-04-2022:3:PAID:E-Wallet:45.23
-2:07-04-2022:1:PAID:Bank:32.33
+ORDERID:DATE:USERID:STATUS:TYPE:AMOUNT

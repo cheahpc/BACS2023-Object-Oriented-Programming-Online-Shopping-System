@@ -1,2 +1,0 @@
-No : Order ID : Item ID : Item Name : Item Price : Qty
-ORDER : Status : Status Date

@@ -1,10 +1,10 @@
-1:TeaName1:9.14
-2:TeaName2:17.96
-3:TeaName3:14.33
-4:TeaName4:2.64
-5:TeaName5:4.04
-6:TeaName6:10.45
-7:TeaName7:17.47
-8:TeaName8:10.08
-9:TeaName9:1.04
-10:TeaName10:9.06
+1:Cham Fussion:9.14
+2:Cocoa Smootea:17.96
+3:Hawaii Fruitea:14.33
+4:Lychee Tea:2.64
+5:Lemon QQ:4.04
+6:Strawberry:10.45
+7:Oolong Milk Tea:17.47
+8:Vanilla Tea:10.08
+9:Vanilla Oatmeal:1.04
+10:Chatime Tea:9.06

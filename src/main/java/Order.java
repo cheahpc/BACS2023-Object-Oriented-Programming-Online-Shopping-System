@@ -56,7 +56,7 @@ public class Order {
         return customerDetails;
     }
 
-    public Payment ggetPayment() {
+    public Payment getPayment() {
         return payment;
     }
 

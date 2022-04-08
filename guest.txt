@@ -1,4 +1,4 @@
-GuestID:FullName:ContactNumber:Address
+GUESTID:NAME:CONTACTNUMBER:ADDRESS
 1:Cheah Pin Chee:0108845882:3630 G Lrg 2 Off Jalan Rock Taman Timberland Kuching Malays
 2:Tan Mei Li:0142233456:21 Jln Pandamaran Kampung Baru Pendamaran Pelabuhan Pelabuhan
 3:Desmond Chew:0109928375:B 46 Lrg Rahim Kajai 14 Taman Tun Dr Ismail
