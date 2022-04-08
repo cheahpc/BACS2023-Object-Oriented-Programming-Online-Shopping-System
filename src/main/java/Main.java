@@ -11,7 +11,6 @@ import java.util.Scanner; // Import the Scanner class to read text files
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.*;
-
 import java.util.regex.*;
 
 public class Main {
@@ -174,7 +173,7 @@ public class Main {
             loopVal = true; // Reset Loop Val
 
             // data properties
-            boolean validation;
+            boolean validation; // use to store the validation check result
 
             // object
             Level4: while (true) {
@@ -224,7 +223,7 @@ public class Main {
                         }
 
                         while (true) {
-                            clearScreen();
+                            clearScreen();// clear screen
                             System.out.println(
                                     "------------------------------------------------------------------");
                             System.out.println(
@@ -251,7 +250,7 @@ public class Main {
                                 "------------------------------------------------------------------\n");
 
                         while (true) {
-                            clearScreen();
+                            clearScreen(); // clear screen
 
                             System.out.println(
                                     "------------------------------------------------------------------");
@@ -289,12 +288,12 @@ public class Main {
                             }
                         }
 
-                        clearScreen();
+                        clearScreen(); // clear screen
                         displayTotal(theOrder.getTotalAmount(), wallet.getDiscountRate(), wallet.getServiceCharges(),
                                 wallet.calTotalFees(theOrder.getTotalAmount())); // display total Fees
-                        continuePrompt();
+                        continuePrompt(); // press enter to continue
 
-                        clearScreen();
+                        clearScreen(); // clear screen
                         displayQRcode(); // QRcode
                         System.out.printf(
                                 ">> Total Fees                                         RM %.2f     \n",
@@ -303,13 +302,13 @@ public class Main {
                                 ">> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                         System.out.println(
                                 "------------------------------------------------------------------");
-                        continuePrompt();
+                        continuePrompt(); // press enter to continue
 
-                        clearScreen();
+                        clearScreen(); // clear screen
                         receipt(theOrder.getOrderID(), theCust.getFullName(), date, theOrder.getTotalAmount());
                         System.out.println(wallet.toString()); // display receipt
                         updateOrderData(wallet); // update record
-                        continuePrompt();
+                        continuePrompt(); // press enter to continue
 
                         tempInt = 0; // clear data
                         option = 0; // unset data
@@ -397,12 +396,12 @@ public class Main {
                             break;
                         }
 
-                        clearScreen();
+                        clearScreen(); // clear screen
                         displayTotal(theOrder.getTotalAmount(), bank.getDiscountRate(), bank.getServiceCharges(),
                                 bank.calTotalFees(theOrder.getTotalAmount())); // display total
-                        continuePrompt();
+                        continuePrompt(); // prompt the user press enter to continue
 
-                        clearScreen();
+                        clearScreen(); // clear screen
                         while (true) {
                             System.out.println(
                                     "------------------------------------------------------------------");
@@ -508,6 +507,7 @@ public class Main {
                 splitData(tempStr[9])[4]);
         echo(theCust.toString(), true);
         echo("", true);
+
         Arrays.fill(tempStr, null); // Reset Array
         windowShopping = false; // Set windows shopping to false
         continuePrompt();
@@ -800,7 +800,7 @@ public class Main {
         }
     }
 
-    // update the payment record
+    // update the record
     public static void updateOrderData(Payment obj) {
         // Update order txt with new successful order details
         setLine(String.format("%s:%s:%s:PAID:%s:%.2f", theOrder.getOrderID(), theOrder.getOrderDate(),
@@ -1564,26 +1564,28 @@ public class Main {
                 break;
             case 4:
                 switch (inputID) {
-                    case 0: // Method Payment
-                        regExPat = Pattern.compile("[0-2]{1}");
+                    case 0: // Option of Method Payment
+                        regExPat = Pattern.compile("[0-2]{1}"); // available input 0-2
                         break;
-                    case 1: // Transaction Name
-                        regExPat = Pattern.compile("[0-6]{1}");
+                    case 1: // Option of Transaction Name
+                        regExPat = Pattern.compile("[0-6]{1}"); // available input 0-6
                         break;
                     case 2: // E-Wallet ID
-                        regExPat = Pattern.compile("[0-9]{5}");
+                        regExPat = Pattern.compile("[0-9]{5}"); // available input 0-9 in 5 digit
                         break;
                     case 3: // Bank Account No
-                        regExPat = Pattern.compile("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}");
+                        regExPat = Pattern.compile("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}"); // available input 0-2
                         break;
                     case 4: // Bank Expire Date
-                        regExPat = Pattern.compile("[01]{1}[0-9]{1}/[0-3]{1}[0-9]{1}");
+                        regExPat = Pattern.compile("[01]{1}[0-9]{1}/[0-3]{1}[0-9]{1}"); // available input 0-9 in 4
+                                                                                        // digit number and between has
+                                                                                        // "/" symbol
                         break;
                     case 5: // Bank CVV Code
-                        regExPat = Pattern.compile("[0-9]{3}");
+                        regExPat = Pattern.compile("[0-9]{3}"); // available input 0-9 in 3 digit number
                         break;
                     case 6: // TAC Code
-                        regExPat = Pattern.compile("[0-9]{6}");
+                        regExPat = Pattern.compile("[0-9]{6}"); // available input 0-9 in 6 digit number
                         break;
                     default:
                         return true; // Default return value when no ID detected
